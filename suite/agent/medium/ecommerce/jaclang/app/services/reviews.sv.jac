@@ -35,6 +35,9 @@ def:pub add_review(product_id: str, user_id: str, rating: int, title: str = "", 
     if p is None {
         return {"error": "Product not found", "status": 404};
     }
+    if rating < 1 or rating > 5 {
+        return {"error": "Rating must be between 1 and 5", "status": 400};
+    }
 
     next_num = len([root() -->][?:Review]);
     for prod in [root() -->][?:Product] {
@@ -57,6 +60,20 @@ def:pub add_review(product_id: str, user_id: str, rating: int, title: str = "", 
 }
 
 
+def:pub list_user_reviews(user_id: str) -> dict {
+    ensure_seeded();
+    user_reviews = [];
+    for prod in [root() -->][?:Product] {
+        for r in [prod -->][?:Review] {
+            if r.user_id == user_id {
+                user_reviews.append(review_dict(r));
+            }
+        }
+    }
+    return {"reviews": user_reviews, "count": len(user_reviews)};
+}
+
+
 def:pub product_review_summary(product_id: str) -> dict {
     ensure_seeded();
     p = find_product(product_id);
@@ -69,4 +86,30 @@ def:pub product_review_summary(product_id: str) -> dict {
     }
     avg = sum([r.rating for r in reviews]) / len(reviews);
     return {"count": len(reviews), "average_rating": int(avg * 100) / 100.0};
+}
+
+
+def:pub recent_reviews(limit: int) -> dict {
+    ensure_seeded();
+    all_reviews = [];
+    for prod in [root() -->][?:Product] {
+        for r in [prod -->][?:Review] {
+            all_reviews.append(review_dict(r));
+        }
+    }
+    # Manual sort by created_at descending (newest first) using bubble sort
+    n = len(all_reviews);
+    for i in range(n) {
+        for j in range(0, n - i - 1) {
+            if all_reviews[j]["created_at"] < all_reviews[j + 1]["created_at"] {
+                # Swap
+                temp = all_reviews[j];
+                all_reviews[j] = all_reviews[j + 1];
+                all_reviews[j + 1] = temp;
+            }
+        }
+    }
+    # Limit the results
+    limited_reviews = all_reviews[:limit];
+    return {"reviews": limited_reviews, "count": len(limited_reviews)};
 }

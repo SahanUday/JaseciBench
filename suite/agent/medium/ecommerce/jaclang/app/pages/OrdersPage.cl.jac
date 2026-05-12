@@ -1,6 +1,30 @@
 """Orders page: list user orders + cancel."""
 
+import from "@jac/runtime" { Link }
 sv import from ..services.orders { list_orders, cancel_order }
+
+
+def status_color(status: str) -> str {
+    if status == "delivered" {
+        return "bg-green-100 text-green-700";
+    }
+    if status == "shipped" {
+        return "bg-blue-100 text-blue-700";
+    }
+    if status == "processed" {
+        return "bg-yellow-100 text-yellow-700";
+    }
+    if status == "pending" {
+        return "bg-gray-100 text-gray-700";
+    }
+    if status == "cancelled" {
+        return "bg-red-100 text-red-700";
+    }
+    if status == "returned" {
+        return "bg-purple-100 text-purple-700";
+    }
+    return "bg-gray-100 text-gray-700";
+}
 
 
 def:pub OrdersPage() -> JsxElement {
@@ -29,24 +53,30 @@ def:pub OrdersPage() -> JsxElement {
     return <div className="max-w-4xl mx-auto px-6 py-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-6">Your Orders</h1>
 
-        {(<p className="text-gray-500 text-center py-12">No orders yet.</p>) if len(orders) == 0 else None}
+        {(<div className="text-center py-12">
+            <p className="text-gray-500 mb-4">No orders yet.</p>
+            <Link to="/" className="inline-block px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                Browse products
+            </Link>
+        </div>) if len(orders) == 0 else None}
 
         <div className="space-y-3">
             {[<div key={o["id"]} className="p-4 bg-white border border-gray-200 rounded-xl">
                 <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0">
-                        <div className="text-sm font-bold text-gray-900">{o["id"]}</div>
+                        <Link to={"/orders/" + o["id"]} className="text-sm font-bold text-blue-600 hover:underline">{o["id"]}</Link>
                         <div className="text-xs text-gray-500 mt-0.5">{o["created_at"]}</div>
                         <div className="text-xs text-gray-600 mt-2">
-                            {o["shipping_address1"] + ", " + o["shipping_city"] + ", " + o["shipping_state"] + " " + o["shipping_zip"]}
+                            {str(o["shipping_address1"]) + ", " + str(o["shipping_city"]) + ", " + str(o["shipping_state"]) + " " + str(o["shipping_zip"])}
                         </div>
+                        <div className="text-xs text-gray-500 mt-1">{"Paid: $" + str(o["total_paid"])}</div>
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                        <span className="text-xs text-gray-600">
+                        <span className={"text-xs rounded-full px-2.5 py-1 " + status_color(str(o["status"]))}>
                             {o["status"]}
                         </span>
                         {(<button
-                            onClick={lambda _e: MouseEvent { do_cancel(o["id"]); }}
+                            onClick={lambda _e: MouseEvent { do_cancel(str(o["id"])); }}
                             className="text-xs text-red-600 hover:text-red-700 hover:underline"
                         >Cancel</button>) if o["status"] in ["pending", "processed"] else None}
                     </div>

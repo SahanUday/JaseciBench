@@ -1,0 +1,1476 @@
+diff --git a/suite/agent/basic/calculator/jaclang/app/client/App.cl.jac b/suite/agent/basic/calculator/jaclang/app/client/App.cl.jac
+index b56f75f..3357244 100644
+--- a/suite/agent/basic/calculator/jaclang/app/client/App.cl.jac
++++ b/suite/agent/basic/calculator/jaclang/app/client/App.cl.jac
+@@ -2,7 +2,7 @@
+ 
+ import from "@jac/runtime" { jacSignup, jacLogin, jacLogout, jacIsLoggedIn }
+ 
+-sv import from server.compute { Compute, ListHistory, ClearHistory }
++sv import from server.compute { Compute, ListHistory, ClearHistory, SumHistory }
+ 
+ import from .components.Display { Display }
+ import from .components.Keypad { Keypad }
+@@ -42,8 +42,10 @@ def:pub app -> JsxElement {
+     async def press_op(op: str) -> None;
+     async def press_equals -> None;
+     def press_clear -> None;
++    def press_backspace -> None;
+     async def refresh_history -> None;
+     async def clear_history -> None;
++    async def show_history_sum -> None;
+ 
+     if not is_logged_in {
+         return
+@@ -178,6 +180,7 @@ def:pub app -> JsxElement {
+                 on_op={press_op}
+                 on_equals={press_equals}
+                 on_clear={press_clear}
++                on_backspace={press_backspace}
+             />
+             <div style={{"marginTop": "1rem"}}>
+                 <button
+@@ -207,11 +210,26 @@ def:pub app -> JsxElement {
+                         "border": "1px solid #fca5a5",
+                         "borderRadius": "0.375rem",
+                         "cursor": "pointer",
+-                        "fontSize": "0.875rem"
++                        "fontSize": "0.875rem",
++                        "marginRight": "0.5rem"
+                     }}
+                 >
+                     Clear history
+                 </button>) if history_visible else None}
++                <button
++                    data-testid="history-sum"
++                    onClick={lambda _e: MouseEvent { show_history_sum(); }}
++                    style={{
++                        "padding": "0.375rem 0.75rem",
++                        "background": "#f3f4f6",
++                        "border": "1px solid #d1d5db",
++                        "borderRadius": "0.375rem",
++                        "cursor": "pointer",
++                        "fontSize": "0.875rem"
++                    }}
++                >
++                    Σ
++                </button>
+             </div>
+             {(<ul
+                 data-testid="history-list"
+diff --git a/suite/agent/basic/calculator/jaclang/app/client/App.impl.jac b/suite/agent/basic/calculator/jaclang/app/client/App.impl.jac
+index be351c3..d2b1f0d 100644
+--- a/suite/agent/basic/calculator/jaclang/app/client/App.impl.jac
++++ b/suite/agent/basic/calculator/jaclang/app/client/App.impl.jac
+@@ -98,6 +98,18 @@ impl app.press_clear -> None {
+     last_error = "";
+ }
+ 
++impl app.press_backspace -> None {
++    last_error = "";
++    if awaiting_operand {
++        return;
++    }
++    display = display[:-1];
++    if not display or display == "-" {
++        display = "0";
++        awaiting_operand = True;
++    }
++}
++
+ impl app.refresh_history -> None {
+     out = root spawn ListHistory();
+     history = out.reports[0] if out.reports else [];
+@@ -107,3 +119,9 @@ impl app.clear_history -> None {
+     root spawn ClearHistory();
+     history = [];
+ }
++
++impl app.show_history_sum -> None {
++    out = root spawn SumHistory();
++    total = out.reports[0] if out.reports else 0.0;
++    display = str(total);
++}
+diff --git a/suite/agent/basic/calculator/jaclang/app/client/components/Keypad.cl.jac b/suite/agent/basic/calculator/jaclang/app/client/components/Keypad.cl.jac
+index 1bce41f..a940c4c 100644
+--- a/suite/agent/basic/calculator/jaclang/app/client/components/Keypad.cl.jac
++++ b/suite/agent/basic/calculator/jaclang/app/client/components/Keypad.cl.jac
+@@ -37,7 +37,8 @@ def:pub Keypad(
+     on_digit: any,
+     on_op: any,
+     on_equals: any,
+-    on_clear: any
++    on_clear: any,
++    on_backspace: any
+ ) -> JsxElement {
+     digits = ["7", "8", "9", "4", "5", "6", "1", "2", "3", "0", "."];
+     ops = ["/", "*", "-", "+"];
+@@ -94,5 +95,21 @@ def:pub Keypad(
+             >
+                 C
+             </button>
++            <button
++                data-testid="calc-key-backspace"
++                onClick={lambda _e: MouseEvent { on_backspace(); }}
++                style={{
++                    "padding": "1rem",
++                    "fontSize": "1.125rem",
++                    "fontWeight": "600",
++                    "background": "#ef4444",
++                    "color": "#ffffff",
++                    "border": "none",
++                    "borderRadius": "0.5rem",
++                    "cursor": "pointer"
++                }}
++            >
++                ⌫
++            </button>
+         </div>;
+ }
+diff --git a/suite/agent/basic/calculator/jaclang/app/server/compute.sv.jac b/suite/agent/basic/calculator/jaclang/app/server/compute.sv.jac
+index d2be229..15a4fa7 100644
+--- a/suite/agent/basic/calculator/jaclang/app/server/compute.sv.jac
++++ b/suite/agent/basic/calculator/jaclang/app/server/compute.sv.jac
+@@ -42,6 +42,13 @@ walker:priv Compute {
+                 return;
+             }
+             value = self.a / self.b;
++        } elif self.op == "%" {
++            if self.b == 0.0 {
++                self.error = "modulo by zero";
++                report {"error": self.error};
++                return;
++            }
++            value = self.a % self.b;
+         } else {
+             self.error = "unknown operator: " + self.op;
+             report {"error": self.error};
+@@ -91,3 +98,19 @@ walker:priv ClearHistory {
+         report {"deleted": self.deleted};
+     }
+ }
++
++walker:priv SumHistory {
++    has total: float = 0.0;
++
++    can collect with Root entry {
++        visit [-->];
++    }
++
++    can accumulate with Calculation entry {
++        self.total += here.result;
++    }
++
++    can finish with Root exit {
++        report self.total;
++    }
++}
+diff --git a/suite/agent/medium/ecommerce/jaclang/app/components/Header.cl.jac b/suite/agent/medium/ecommerce/jaclang/app/components/Header.cl.jac
+index f5a01bf..fd3f061 100644
+--- a/suite/agent/medium/ecommerce/jaclang/app/components/Header.cl.jac
++++ b/suite/agent/medium/ecommerce/jaclang/app/components/Header.cl.jac
+@@ -2,9 +2,19 @@
+ 
+ import from "@jac/runtime" { Link }
+ import from "lucide-react" { ShoppingCart, Package, Search, Home }
++sv import from ..services.cart { get_cart }
+ 
+ 
+ def:pub Header() -> JsxElement {
++    has cart_count: int = 0;
++
++    async can with entry {
++        result = await get_cart("user_001");
++        if result {
++            cart_count = result["count"];
++        }
++    }
++
+     return <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/90 backdrop-blur">
+         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+             <Link to="/" className="flex items-center gap-2 text-gray-900 font-bold tracking-tight">
+@@ -23,6 +33,7 @@ def:pub Header() -> JsxElement {
+                 <Link to="/cart" className="px-3 py-1.5 rounded-md text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 flex items-center gap-1.5">
+                     <ShoppingCart size={14} />
+                     Cart
++                    {cart_count > 0 and <span className="ml-1 px-1.5 py-0.5 text-xs font-semibold rounded-full bg-indigo-600 text-white">{str(cart_count)}</span>}
+                 </Link>
+                 <Link to="/orders" className="px-3 py-1.5 rounded-md text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100">
+                     Orders
+diff --git a/suite/agent/medium/ecommerce/jaclang/app/components/ProductCard.cl.jac b/suite/agent/medium/ecommerce/jaclang/app/components/ProductCard.cl.jac
+index 2a92bbf..7f03251 100644
+--- a/suite/agent/medium/ecommerce/jaclang/app/components/ProductCard.cl.jac
++++ b/suite/agent/medium/ecommerce/jaclang/app/components/ProductCard.cl.jac
+@@ -17,7 +17,16 @@ def:pub ProductCard(product: Any) -> JsxElement {
+         <p className="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed">
+             {product["description"]}
+         </p>
++        {product["review_count"] > 0 and (
++            <div className="mt-2 flex items-center gap-1 text-xs text-gray-600">
++                <span>⭐ {str(product["average_rating"])}</span>
++                <span className="text-gray-400">({str(product["review_count"])} reviews)</span>
++            </div>
++        )}
+         <div className="mt-3 flex items-center justify-between">
++            <span className="text-sm font-bold text-gray-900">
++                {"$" + str(product["min_price"])}
++            </span>
+             <span className="text-xs text-gray-400">
+                 {str(len(product["variants"])) + " variants"}
+             </span>
+diff --git a/suite/agent/medium/ecommerce/jaclang/app/frontend.cl.jac b/suite/agent/medium/ecommerce/jaclang/app/frontend.cl.jac
+index bdd2e7e..cef4c09 100644
+--- a/suite/agent/medium/ecommerce/jaclang/app/frontend.cl.jac
++++ b/suite/agent/medium/ecommerce/jaclang/app/frontend.cl.jac
+@@ -6,6 +6,7 @@ import from .pages.CatalogPage { CatalogPage }
+ import from .pages.ProductPage { ProductPage }
+ import from .pages.CartPage { CartPage }
+ import from .pages.OrdersPage { OrdersPage }
++import from .pages.OrderDetailPage { OrderDetailPage }
+ import from .pages.SearchPage { SearchPage }
+ 
+ 
+@@ -18,6 +19,7 @@ def:pub Shell() -> JsxElement {
+                 <Route path="/products/:id" element={<ProductPage />} />
+                 <Route path="/cart" element={<CartPage />} />
+                 <Route path="/orders" element={<OrdersPage />} />
++                <Route path="/orders/:id" element={<OrderDetailPage />} />
+                 <Route path="/search" element={<SearchPage />} />
+                 <Route path="*" element={<Navigate to="/" replace={True} />} />
+             </Routes>
+diff --git a/suite/agent/medium/ecommerce/jaclang/app/main.jac b/suite/agent/medium/ecommerce/jaclang/app/main.jac
+index d06d381..5a4352c 100644
+--- a/suite/agent/medium/ecommerce/jaclang/app/main.jac
++++ b/suite/agent/medium/ecommerce/jaclang/app/main.jac
+@@ -11,7 +11,7 @@ import from services.users {
+     list_users, get_profile, list_addresses, list_payment_methods,
+     add_address, update_address, delete_address,
+ }
+-import from services.reviews { list_reviews, add_review, product_review_summary }
++import from services.reviews { list_reviews, add_review, product_review_summary, list_user_reviews }
+ import from services.cart { get_cart, add_to_cart, update_cart_item, remove_from_cart, clear_cart, checkout }
+ import from services.orders {
+     list_orders, get_order, cancel_order, update_order_status,
+diff --git a/suite/agent/medium/ecommerce/jaclang/app/pages/CartPage.cl.jac b/suite/agent/medium/ecommerce/jaclang/app/pages/CartPage.cl.jac
+index f964d73..5b2cfcd 100644
+--- a/suite/agent/medium/ecommerce/jaclang/app/pages/CartPage.cl.jac
++++ b/suite/agent/medium/ecommerce/jaclang/app/pages/CartPage.cl.jac
+@@ -50,7 +50,7 @@ def:pub CartPage() -> JsxElement {
+     items = cart["items"] if cart else [];
+ 
+     return <div className="max-w-4xl mx-auto px-6 py-8">
+-        <h1 className="text-3xl font-bold text-gray-900 mb-6">Shopping Cart</h1>
++        <h1 className="text-3xl font-bold text-gray-900 mb-6">{"Shopping Cart (" + str(cart["count"]) + " items)"}</h1>
+ 
+         {(<div>
+             <div className="space-y-3">
+@@ -77,6 +77,9 @@ def:pub CartPage() -> JsxElement {
+                             className="w-8 h-8 rounded border border-gray-300 hover:bg-gray-50 text-gray-600"
+                         >+</button>
+                     </div>
++                    <div className="text-sm font-bold text-gray-900 text-right">
++                        {"$" + str(item["subtotal"])}
++                    </div>
+                     <button
+                         onClick={lambda _e: MouseEvent { remove_item(item["id"]); }}
+                         className="text-gray-400 hover:text-red-600 text-sm"
+@@ -84,20 +87,37 @@ def:pub CartPage() -> JsxElement {
+                 </div> for item in items]}
+             </div>
+ 
+-            <div className="mt-6 p-5 bg-gray-50 rounded-xl flex items-center justify-between">
+-                <div>
+-                    <div className="text-sm text-gray-600">Total</div>
+-                    <div className="text-2xl font-bold text-gray-900">{"$" + str(cart["total"])}</div>
++            <div className="mt-6 p-5 bg-gray-50 rounded-xl">
++                <div className="space-y-2 mb-4">
++                    <div className="flex justify-between text-sm">
++                        <span className="text-gray-600">Subtotal</span>
++                        <span className="text-gray-900">{"$" + str(cart["total"])}</span>
++                    </div>
++                    <div className="flex justify-between text-sm">
++                        <span className="text-gray-600">Shipping</span>
++                        <span className="text-gray-900">{"$" + str(cart["shipping"])}</span>
++                    </div>
++                    <div className="flex justify-between text-lg font-bold border-t border-gray-200 pt-2">
++                        <span className="text-gray-900">Grand Total</span>
++                        <span className="text-gray-900">{"$" + str(cart["grand_total"])}</span>
++                    </div>
+                 </div>
+                 <button
+                     onClick={do_checkout}
+                     disabled={checking_out}
+-                    className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition-colors disabled:opacity-50"
++                    className="w-full px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition-colors disabled:opacity-50"
+                 >
+                     {("Processing..." if checking_out else "Checkout")}
+                 </button>
+             </div>
+             {(<p className="mt-3 text-sm text-center text-red-600">{feedback}</p>) if feedback else None}
+-        </div>) if len(items) > 0 else None}
++        </div>) if len(items) > 0 else (
++            <div className="text-center py-12">
++                <p className="text-gray-600 mb-4">Your cart is empty</p>
++                <Link to="/" className="inline-block px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition-colors">
++                    Browse products
++                </Link>
++            </div>
++        )}
+     </div>;
+ }
+diff --git a/suite/agent/medium/ecommerce/jaclang/app/pages/CatalogPage.cl.jac b/suite/agent/medium/ecommerce/jaclang/app/pages/CatalogPage.cl.jac
+index 986c226..80abb0e 100644
+--- a/suite/agent/medium/ecommerce/jaclang/app/pages/CatalogPage.cl.jac
++++ b/suite/agent/medium/ecommerce/jaclang/app/pages/CatalogPage.cl.jac
+@@ -18,12 +18,25 @@ def:pub CatalogPage() -> JsxElement {
+         loading = False;
+     }
+ 
++    async def select_category(cat_id: str) -> None {
++        selected_cat = cat_id;
++        loading = True;
++        prods_result = await list_products(cat_id);
++        products = prods_result if prods_result else [];
++        loading = False;
++    }
++
+     return <div className="max-w-6xl mx-auto px-6 py-8">
+         <div className="mb-8">
+             <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Catalog</h1>
+             <p className="text-gray-600 mt-1">Browse our products by category.</p>
+         </div>
+ 
++        <div className="mb-6 flex flex-wrap gap-2">
++            <CategoryButton catId="" label="All" selectedCat={selected_cat} onSelect={select_category} />
++            {[<CategoryButton key={cat["id"]} catId={cat["id"]} label={f"{cat['name']} ({cat['product_count']})"} selectedCat={selected_cat} onSelect={select_category} /> for cat in categories]}
++        </div>
++
+         {(<p className="text-gray-500">Loading...</p>) if loading else None}
+         {(<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+             {[<ProductCard key={p["id"]} product={p} /> for p in products]}
+@@ -31,3 +44,16 @@ def:pub CatalogPage() -> JsxElement {
+         {(<p className="text-gray-500 text-center py-12">No products in this category.</p>) if not loading and len(products) == 0 else None}
+     </div>;
+ }
++
++def CategoryButton(catId: str, label: str, selectedCat: str, onSelect: Any) -> JsxElement {
++    def handle_click(e: MouseEvent) -> None {
++        if onSelect { onSelect(catId); }
++    }
++
++    is_selected = catId == selectedCat;
++    btn_classes = ("bg-blue-600 text-white" if is_selected else "bg-gray-200 text-gray-700") + " px-4 py-2 rounded-lg font-medium hover:opacity-90 transition";
++
++    return <button onClick={handle_click} className={btn_classes}>
++        {label}
++    </button>;
++}
+diff --git a/suite/agent/medium/ecommerce/jaclang/app/pages/OrdersPage.cl.jac b/suite/agent/medium/ecommerce/jaclang/app/pages/OrdersPage.cl.jac
+index a427a99..7c66d9c 100644
+--- a/suite/agent/medium/ecommerce/jaclang/app/pages/OrdersPage.cl.jac
++++ b/suite/agent/medium/ecommerce/jaclang/app/pages/OrdersPage.cl.jac
+@@ -1,8 +1,32 @@
+ """Orders page: list user orders + cancel."""
+ 
++import from "@jac/runtime" { Link }
+ sv import from ..services.orders { list_orders, cancel_order }
+ 
+ 
++def status_color(status: str) -> str {
++    if status == "delivered" {
++        return "bg-green-100 text-green-700";
++    }
++    if status == "shipped" {
++        return "bg-blue-100 text-blue-700";
++    }
++    if status == "processed" {
++        return "bg-yellow-100 text-yellow-700";
++    }
++    if status == "pending" {
++        return "bg-gray-100 text-gray-700";
++    }
++    if status == "cancelled" {
++        return "bg-red-100 text-red-700";
++    }
++    if status == "returned" {
++        return "bg-purple-100 text-purple-700";
++    }
++    return "bg-gray-100 text-gray-700";
++}
++
++
+ def:pub OrdersPage() -> JsxElement {
+     has orders: list = [];
+     has loading: bool = True;
+@@ -29,24 +53,30 @@ def:pub OrdersPage() -> JsxElement {
+     return <div className="max-w-4xl mx-auto px-6 py-8">
+         <h1 className="text-3xl font-bold text-gray-900 mb-6">Your Orders</h1>
+ 
+-        {(<p className="text-gray-500 text-center py-12">No orders yet.</p>) if len(orders) == 0 else None}
++        {(<div className="text-center py-12">
++            <p className="text-gray-500 mb-4">No orders yet.</p>
++            <Link to="/" className="inline-block px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
++                Browse products
++            </Link>
++        </div>) if len(orders) == 0 else None}
+ 
+         <div className="space-y-3">
+             {[<div key={o["id"]} className="p-4 bg-white border border-gray-200 rounded-xl">
+                 <div className="flex items-start justify-between gap-4">
+                     <div className="min-w-0">
+-                        <div className="text-sm font-bold text-gray-900">{o["id"]}</div>
++                        <Link to={"/orders/" + o["id"]} className="text-sm font-bold text-blue-600 hover:underline">{o["id"]}</Link>
+                         <div className="text-xs text-gray-500 mt-0.5">{o["created_at"]}</div>
+                         <div className="text-xs text-gray-600 mt-2">
+-                            {o["shipping_address1"] + ", " + o["shipping_city"] + ", " + o["shipping_state"] + " " + o["shipping_zip"]}
++                            {str(o["shipping_address1"]) + ", " + str(o["shipping_city"]) + ", " + str(o["shipping_state"]) + " " + str(o["shipping_zip"])}
+                         </div>
++                        <div className="text-xs text-gray-500 mt-1">{"Paid: $" + str(o["total_paid"])}</div>
+                     </div>
+                     <div className="flex flex-col items-end gap-2">
+-                        <span className="text-xs text-gray-600">
++                        <span className={"text-xs rounded-full px-2.5 py-1 " + status_color(str(o["status"]))}>
+                             {o["status"]}
+                         </span>
+                         {(<button
+-                            onClick={lambda _e: MouseEvent { do_cancel(o["id"]); }}
++                            onClick={lambda _e: MouseEvent { do_cancel(str(o["id"])); }}
+                             className="text-xs text-red-600 hover:text-red-700 hover:underline"
+                         >Cancel</button>) if o["status"] in ["pending", "processed"] else None}
+                     </div>
+diff --git a/suite/agent/medium/ecommerce/jaclang/app/pages/ProductPage.cl.jac b/suite/agent/medium/ecommerce/jaclang/app/pages/ProductPage.cl.jac
+index 573ea62..775b91a 100644
+--- a/suite/agent/medium/ecommerce/jaclang/app/pages/ProductPage.cl.jac
++++ b/suite/agent/medium/ecommerce/jaclang/app/pages/ProductPage.cl.jac
+@@ -56,6 +56,12 @@ def:pub ProductPage() -> JsxElement {
+                 <h1 className="text-3xl font-bold text-gray-900">{product["name"]}</h1>
+                 <p className="text-gray-600 mt-2 leading-relaxed">{product["description"]}</p>
+ 
++                {(
++                    <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
++                        <p className="text-sm font-medium text-red-800">Currently unavailable</p>
++                    </div>
++                ) if sum([v["stock_qty"] for v in product["variants"]]) == 0 else None}
++
+                 <div className="mt-6">
+                     <h3 className="text-sm font-semibold text-gray-900 mb-2">Variants</h3>
+                     <div className="space-y-2">
+diff --git a/suite/agent/medium/ecommerce/jaclang/app/pages/SearchPage.cl.jac b/suite/agent/medium/ecommerce/jaclang/app/pages/SearchPage.cl.jac
+index b2be8e7..6e42ac0 100644
+--- a/suite/agent/medium/ecommerce/jaclang/app/pages/SearchPage.cl.jac
++++ b/suite/agent/medium/ecommerce/jaclang/app/pages/SearchPage.cl.jac
+@@ -1,20 +1,32 @@
+ """Search page: search products by query."""
+ 
+-sv import from ..services.catalog { search_products }
++sv import from ..services.catalog { search_products, list_categories }
+ import from ..components.ProductCard { ProductCard }
+ 
+ 
+ def:pub SearchPage() -> JsxElement {
+     has query: str = "";
++    has category_id: str = "";
++    has min_price: str = "";
++    has max_price: str = "";
+     has results: list = [];
++    has categories: list = [];
+     has searching: bool = False;
+     has searched: bool = False;
+ 
++    async can with entry {
++        cat_result = await list_categories();
++        categories = cat_result if cat_result else [];
++    }
++
+     async def do_search(e: FormEvent) -> None {
+         e.preventDefault();
+-        if not query.strip() { return; }
+         searching = True;
+-        result = await search_products(query);
++        
++        min_p = float(min_price) if min_price else 0.0;
++        max_p = float(max_price) if max_price else 0.0;
++        
++        result = await search_products(query, category_id, min_p, max_p);
+         results = result if result else [];
+         searching = False;
+         searched = True;
+@@ -23,23 +35,53 @@ def:pub SearchPage() -> JsxElement {
+     return <div className="max-w-6xl mx-auto px-6 py-8">
+         <h1 className="text-3xl font-bold text-gray-900 mb-6">Search Products</h1>
+ 
+-        <form onSubmit={do_search} className="flex gap-2 mb-8">
+-            <input
+-                type="text"
+-                value={query}
+-                onChange={lambda e: ChangeEvent { query = e.target.value; }}
+-                placeholder="Try 'shirt', 'coffee', 'wireless'..."
+-                className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
+-            />
+-            <button
+-                type="submit"
+-                className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg"
+-            >
+-                Search
+-            </button>
++        <form onSubmit={do_search} className="space-y-4 mb-8">
++            <div className="flex gap-2">
++                <input
++                    type="text"
++                    value={query}
++                    onChange={lambda e: ChangeEvent { query = e.target.value; }}
++                    placeholder="Try 'shirt', 'coffee', 'wireless'..."
++                    className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
++                />
++                <select
++                    value={category_id}
++                    onChange={lambda e: ChangeEvent { category_id = e.target.value; }}
++                    className="px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
++                >
++                    <option value="">All Categories</option>
++                    {[<option key={c["id"]} value={c["id"]}>{c["name"]}</option> for c in categories]}
++                </select>
++            </div>
++            
++            <div className="flex gap-2 items-center">
++                <label className="text-sm font-medium text-gray-700">Price Range:</label>
++                <input
++                    type="text"
++                    value={min_price}
++                    onChange={lambda e: ChangeEvent { min_price = e.target.value; }}
++                    placeholder="Min price"
++                    className="w-32 px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
++                />
++                <span className="text-gray-500">-</span>
++                <input
++                    type="text"
++                    value={max_price}
++                    onChange={lambda e: ChangeEvent { max_price = e.target.value; }}
++                    placeholder="Max price"
++                    className="w-32 px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
++                />
++                <button
++                    type="submit"
++                    className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg"
++                >
++                    Search
++                </button>
++            </div>
+         </form>
+ 
+         {(<p className="text-gray-500">Searching...</p>) if searching else None}
++        {(<p className="text-gray-600">No products match your search.</p>) if (searched and not searching and len(results) == 0) else None}
+         {(<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+             {[<ProductCard key={p["id"]} product={p} /> for p in results]}
+         </div>) if len(results) > 0 else None}
+diff --git a/suite/agent/medium/ecommerce/jaclang/app/services/cart.sv.jac b/suite/agent/medium/ecommerce/jaclang/app/services/cart.sv.jac
+index 406ae94..c82313a 100644
+--- a/suite/agent/medium/ecommerce/jaclang/app/services/cart.sv.jac
++++ b/suite/agent/medium/ecommerce/jaclang/app/services/cart.sv.jac
+@@ -43,9 +43,31 @@ def:pub get_cart(user_id: str) -> dict {
+             continue;
+         }
+         items.append(cart_item_dict(ci, v));
+-        total = total + v.price;
++        total = total + (v.price * ci.quantity);
+     }
+-    return {"items": items, "total": total};
++    shipping = 5.99 if total > 0.0 else 0.0;
++    grand_total = round(total + shipping, 2);
++    return {"items": items, "total": total, "count": len(items), "shipping": shipping, "grand_total": grand_total};
++}
++
++
++"""Calculate cart totals without full item details."""
++def:pub cart_cost_summary(user_id: str) -> dict {
++    ensure_seeded();
++    unit_total = 0.0;
++    item_count = 0;
++    for ci in [root() -->][?:CartItem] {
++        if ci.user_id != user_id {
++            continue;
++        }
++        v = find_variant(ci.variant_id);
++        if v is None {
++            continue;
++        }
++        unit_total = unit_total + (v.price * ci.quantity);
++        item_count = item_count + 1;
++    }
++    return {"unit_total": unit_total, "item_count": item_count};
+ }
+ 
+ 
+@@ -58,10 +80,22 @@ def:pub add_to_cart(user_id: str, variant_id: str, quantity: int = 1) -> dict {
+     if v is None {
+         return {"error": "Variant not found", "status": 404};
+     }
+-    if v.stock_qty < quantity {
++
++    # Find existing cart item to check cumulative quantity
++    existing_qty = 0;
++    for ci in [root() -->][?:CartItem] {
++        if ci.user_id == user_id and ci.variant_id == variant_id {
++            existing_qty = ci.quantity;
++            break;
++        }
++    }
++
++    # Check cumulative quantity against stock
++    if existing_qty + quantity > v.stock_qty {
+         return {"error": "Insufficient stock", "status": 400};
+     }
+ 
++    # Update existing or create new
+     for ci in [root() -->][?:CartItem] {
+         if ci.user_id == user_id and ci.variant_id == variant_id {
+             ci.quantity = ci.quantity + quantity;
+@@ -104,6 +138,20 @@ def:pub remove_from_cart(cart_item_id: str) -> dict {
+ }
+ 
+ 
++def:pub cart_replace_variant(cart_item_id: str, new_variant_id: str) -> dict {
++    ci = find_cart_item(cart_item_id);
++    if ci is None {
++        return {"error": "Cart item not found", "status": 404};
++    }
++    v = find_variant(new_variant_id);
++    if v is None {
++        return {"error": "Variant not found", "status": 404};
++    }
++    ci.variant_id = new_variant_id;
++    return cart_item_dict(ci, v);
++}
++
++
+ def:pub clear_cart(user_id: str) -> dict {
+     removed = 0;
+     for ci in [root() -->][?:CartItem] {
+@@ -179,6 +227,7 @@ def:pub checkout(
+     for idx in range(len(resolved_variants)) {
+         v = resolved_variants[idx];
+         qty = resolved_qtys[idx];
++        v.stock_qty = v.stock_qty - qty;
+         oi_id = "oi_" + order_id + "_" + str(idx + 1);
+         order ++> OrderItem(
+             id=oi_id,
+@@ -204,3 +253,14 @@ def:pub checkout(
+ 
+     return {"order_id": order_id, "total": total_rounded, "status": "pending"};
+ }
++
++
++def:pub cart_total_quantity(user_id: str) -> int {
++    total_qty = 0;
++    for ci in [root() -->][?:CartItem] {
++        if ci.user_id == user_id {
++            total_qty = total_qty + ci.quantity;
++        }
++    }
++    return total_qty;
++}
+diff --git a/suite/agent/medium/ecommerce/jaclang/app/services/catalog.sv.jac b/suite/agent/medium/ecommerce/jaclang/app/services/catalog.sv.jac
+index 909e338..c1c714b 100644
+--- a/suite/agent/medium/ecommerce/jaclang/app/services/catalog.sv.jac
++++ b/suite/agent/medium/ecommerce/jaclang/app/services/catalog.sv.jac
+@@ -1,6 +1,6 @@
+ """Catalog service: categories, products, variants, search."""
+ 
+-import from models { Category, Product, Variant }
++import from models { Category, Product, Variant, Review }
+ import from seed { seed_catalog }
+ 
+ 
+@@ -12,10 +12,13 @@ def ensure_seeded() -> None {
+ 
+ 
+ def category_dict(c: Category) -> dict {
++    all_products = [root() -->][?:Product];
++    product_count = len([p for p in all_products if p.active and p.category_id == c.id]);
+     return {
+         "id": c.id,
+         "name": c.name,
+         "description": c.description,
++        "product_count": product_count,
+     };
+ }
+ 
+@@ -33,6 +36,14 @@ def variant_dict(v: Variant) -> dict {
+ 
+ 
+ def product_dict(p: Product, include_variants: bool = True) -> dict {
++    reviews = [p -->][?:Review];
++    review_count = len(reviews);
++    average_rating = round(sum([r.rating for r in reviews]) / review_count, 2) if review_count > 0 else 0.0;
++    
++    # Calculate total stock across all variants
++    variant_nodes = [p -->][?:Variant];
++    total_stock = sum([v.stock_qty for v in variant_nodes]) if variant_nodes else 0;
++    
+     if not include_variants {
+         return {
+             "id": p.id,
+@@ -40,9 +51,13 @@ def product_dict(p: Product, include_variants: bool = True) -> dict {
+             "description": p.description,
+             "category_id": p.category_id,
+             "active": p.active,
++            "review_count": review_count,
++            "average_rating": average_rating,
++            "total_stock": total_stock,
+         };
+     }
+-    variants = [variant_dict(v) for v in [p -->][?:Variant]];
++    variants = [variant_dict(v) for v in variant_nodes];
++    min_price = min([v.price for v in variant_nodes]) if variant_nodes else 0.0;
+     return {
+         "id": p.id,
+         "name": p.name,
+@@ -50,6 +65,10 @@ def product_dict(p: Product, include_variants: bool = True) -> dict {
+         "category_id": p.category_id,
+         "active": p.active,
+         "variants": variants,
++        "min_price": min_price,
++        "review_count": review_count,
++        "average_rating": average_rating,
++        "total_stock": total_stock,
+     };
+ }
+ 
+@@ -85,6 +104,9 @@ def:pub list_categories() -> list[dict] {
+ def:pub list_products(category_id: str = "") -> list[dict] {
+     ensure_seeded();
+     products = [root() -->][?:Product];
++    if category_id {
++        return [product_dict(p) for p in products if p.active and p.category_id == category_id];
++    }
+     return [product_dict(p) for p in products if p.active];
+ }
+ 
+@@ -102,20 +124,239 @@ def:pub get_product(product_id: str) -> dict | None {
+ }
+ 
+ 
+-def:pub search_products(q: str) -> list[dict] {
++def:pub search_products(q: str = "", category_id: str = "", min_price: float = 0.0, max_price: float = 0.0) -> list[dict] {
+     ensure_seeded();
+-    if not q {
+-        return [];
++    
++    q_lower = q.lower() if q else "";
++    matches = [];
++    
++    for p in [root() -->][?:Product] {
++        if not p.active {
++            continue;
++        }
++        
++        # Text search filter
++        if q and not (q_lower in p.name.lower() or q_lower in p.description.lower()) {
++            continue;
++        }
++        
++        # Category filter
++        if category_id and p.category_id != category_id {
++            continue;
++        }
++        
++        # Price filters
++        variants = [p -->][?:Variant];
++        if variants {
++            product_min_price = min([v.price for v in variants]);
++            
++            if min_price > 0.0 and product_min_price < min_price {
++                continue;
++            }
++            
++            if max_price > 0.0 and product_min_price > max_price {
++                continue;
++            }
++        }
++        
++        matches.append(product_dict(p));
+     }
++    
++    return matches;
++}
++
++
++def:pub search_by_name(q: str) -> list[dict] {
++    ensure_seeded();
++    
+     q_lower = q.lower();
+     matches = [];
++    
+     for p in [root() -->][?:Product] {
+         if not p.active {
+             continue;
+         }
+-        if q_lower in p.name.lower() or q_lower in p.description.lower() {
++        
++        # Search only in product name
++        if q_lower in p.name.lower() {
+             matches.append(product_dict(p));
+         }
+     }
++    
+     return matches;
+ }
++
++
++def:pub top_rated_products(limit: int) -> list[dict] {
++    ensure_seeded();
++    
++    # Get all active products with their ratings
++    products = [root() -->][?:Product];
++    active_products = [product_dict(p) for p in products if p.active];
++    
++    # Sort by average_rating descending
++    sorted_products = sorted(active_products, key=lambda p: p["average_rating"], reverse=True);
++    
++    # Return top limit entries
++    return sorted_products[:limit];
++}
++
++
++def:pub update_variant_price(variant_id: str, new_price: float) -> dict {
++    ensure_seeded();
++    
++    # Find the variant
++    v = find_variant(variant_id);
++    if v is None {
++        return {"error": "Variant not found", "status": 404};
++    }
++    
++    # Validate price is non-negative
++    if new_price < 0 {
++        return {"error": "Price cannot be negative", "status": 400};
++    }
++    
++    # Update the price
++    v.price = new_price;
++    
++    # Return the updated variant
++    return variant_dict(v);
++}
++
++
++def:pub list_out_of_stock_products() -> list[dict] {
++    ensure_seeded();
++    
++    out_of_stock = [];
++    
++    for p in [root() -->][?:Product] {
++        if not p.active {
++            continue;
++        }
++        
++        # Get all variants for this product
++        variants = [p -->][?:Variant];
++        
++        # Skip products with no variants
++        if not variants {
++            continue;
++        }
++        
++        # Check if ALL variants have stock_qty == 0
++        all_out_of_stock = all([v.stock_qty == 0 for v in variants]);
++        
++        if all_out_of_stock {
++            out_of_stock.append(product_dict(p));
++        }
++    }
++    
++    return out_of_stock;
++}
++
++
++def:pub deactivate_product(product_id: str) -> dict {
++    ensure_seeded();
++    
++    # Find the product
++    p = find_product(product_id);
++    if p is None {
++        return {"error": "Product not found", "status": 404};
++    }
++    
++    # Set active to False
++    p.active = False;
++    
++    # Return the updated product dict (without active filter)
++    return product_dict(p);
++}
++
++
++def:pub low_stock_products(threshold: int) -> list[dict] {
++    ensure_seeded();
++    
++    low_stock = [];
++    
++    for p in [root() -->][?:Product] {
++        if not p.active {
++            continue;
++        }
++        
++        # Get all variants for this product
++        variants = [p -->][?:Variant];
++        
++        # Skip products with no variants
++        if not variants {
++            continue;
++        }
++        
++        # Check if ANY variant has stock_qty < threshold
++        has_low_stock = any([v.stock_qty < threshold for v in variants]);
++        
++        if has_low_stock {
++            low_stock.append(product_dict(p));
++        }
++    }
++    
++    return low_stock;
++}
++
++
++def:pub product_count() -> int {
++    ensure_seeded();
++    
++    # Count all active products
++    products = [root() -->][?:Product];
++    return len([p for p in products if p.active]);
++}
++
++
++def:pub average_product_price() -> float {
++    ensure_seeded();
++    
++    # Collect all variant prices from active products
++    all_prices = [];
++    
++    for p in [root() -->][?:Product] {
++        if not p.active {
++            continue;
++        }
++        
++        # Get all variants for this product
++        variants = [p -->][?:Variant];
++        
++        # Collect their prices
++        for v in variants {
++            all_prices.append(v.price);
++        }
++    }
++    
++    # Return the mean, or 0.0 if no prices found
++    if not all_prices {
++        return 0.0;
++    }
++    
++    return sum(all_prices) / len(all_prices);
++}
++
++
++def:pub products_without_reviews() -> list[dict] {
++    ensure_seeded();
++    
++    no_reviews = [];
++    
++    for p in [root() -->][?:Product] {
++        if not p.active {
++            continue;
++        }
++        
++        # Get all reviews for this product
++        reviews = [p -->][?:Review];
++        
++        # Check if product has zero reviews
++        if len(reviews) == 0 {
++            no_reviews.append(product_dict(p));
++        }
++    }
++    
++    return no_reviews;
++}
+diff --git a/suite/agent/medium/ecommerce/jaclang/app/services/orders.sv.jac b/suite/agent/medium/ecommerce/jaclang/app/services/orders.sv.jac
+index a977a72..00265c1 100644
+--- a/suite/agent/medium/ecommerce/jaclang/app/services/orders.sv.jac
++++ b/suite/agent/medium/ecommerce/jaclang/app/services/orders.sv.jac
+@@ -1,9 +1,9 @@
+ """Orders service: list, view, cancel, return, modify items, update status/address."""
+ 
+ import from datetime { datetime }
+-import from models { Order, OrderItem, Payment, Variant }
+-import from services.catalog { ensure_seeded, find_variant }
+-import from services.users { find_payment_method }
++import from models { Order, OrderItem, Payment, Variant, UserProfile, Product }
++import from services.catalog { ensure_seeded, find_variant, product_dict }
++import from services.users { find_payment_method, user_dict }
+ 
+ 
+ def find_order(order_id: str) -> Order | None {
+@@ -16,6 +16,14 @@ def find_order(order_id: str) -> Order | None {
+ }
+ 
+ 
++def calc_total_paid(o: Order) -> float {
++    payment_sum = sum([p.amount for p in [o -->][?:Payment] if p.transaction_type == "payment"]);
++    refund_sum = sum([p.amount for p in [o -->][?:Payment] if p.transaction_type == "refund"]);
++    total = payment_sum - refund_sum;
++    return int(total * 100 + 0.5) / 100.0;
++}
++
++
+ def order_dict(o: Order, include_items: bool = True) -> dict {
+     if not include_items {
+         return {
+@@ -29,6 +37,7 @@ def order_dict(o: Order, include_items: bool = True) -> dict {
+             "shipping_zip": o.shipping_zip,
+             "shipping_country": o.shipping_country,
+             "created_at": o.created_at,
++            "total_paid": calc_total_paid(o),
+         };
+     }
+     items = [
+@@ -80,12 +89,21 @@ def find_order_item(o: Order, oi_id: str) -> OrderItem | None {
+ }
+ 
+ 
+-def:pub list_orders(user_id: str = "") -> list[dict] {
++def:pub list_orders(user_id: str = "", from_date: str = "", to_date: str = "", status: str = "") -> list[dict] {
+     ensure_seeded();
+     orders = [root() -->][?:Order];
+     if user_id {
+         orders = [o for o in orders if o.user_id == user_id];
+     }
++    if from_date {
++        orders = [o for o in orders if o.created_at >= from_date];
++    }
++    if to_date {
++        orders = [o for o in orders if o.created_at <= to_date];
++    }
++    if status {
++        orders = [o for o in orders if o.status == status];
++    }
+     return [order_dict(o, include_items=False) for o in orders];
+ }
+ 
+@@ -230,6 +248,17 @@ def:pub modify_order_items(order_id: str, changes: list[dict]) -> dict {
+         }
+     }
+ 
++    new_total = 0.0;
++    for oi in [o -->][?:OrderItem] {
++        new_total = new_total + (oi.price_snapshot * oi.quantity);
++    }
++    new_total_rounded = int(new_total * 100) / 100.0;
++    for pay in [o -->][?:Payment] {
++        if pay.transaction_type == "payment" {
++            pay.amount = new_total_rounded;
++        }
++    }
++
+     return order_dict(o);
+ }
+ 
+@@ -265,3 +294,231 @@ def:pub update_order_status(order_id: str, new_status: str) -> dict {
+     o.status = new_status;
+     return {"id": o.id, "status": o.status};
+ }
++
++
++def:pub get_user_spend(user_id: str) -> dict {
++    ensure_seeded();
++    
++    # Find all orders for this user
++    user_orders = [o for o in [root() -->][?:Order] if o.user_id == user_id];
++    
++    total_paid = 0.0;
++    total_refunded = 0.0;
++    
++    # Sum all payments and refunds across all user orders
++    for o in user_orders {
++        for p in [o -->][?:Payment] {
++            if p.transaction_type == "payment" {
++                total_paid = total_paid + p.amount;
++            } elif p.transaction_type == "refund" {
++                total_refunded = total_refunded + p.amount;
++            }
++        }
++    }
++    
++    net_spent = total_paid - total_refunded;
++    
++    return {
++        "total_paid": total_paid,
++        "total_refunded": total_refunded,
++        "net_spent": net_spent
++    };
++}
++
++
++def:pub users_with_min_orders(min_count: int) -> list[dict] {
++    ensure_seeded();
++    
++    # Get all users
++    all_users = [root() -->][?:UserProfile];
++    
++    # Get all orders
++    all_orders = [root() -->][?:Order];
++    
++    # Filter users by order count
++    result: list[dict] = [];
++    for u in all_users {
++        order_count = len([o for o in all_orders if o.user_id == u.id]);
++        if order_count >= min_count {
++            result.append(user_dict(u));
++        }
++    }
++    
++    return result;
++}
++
++
++def:pub total_revenue() -> float {
++    ensure_seeded();
++    
++    # Get all Payment nodes across the entire graph
++    all_payments = [root() -->][?:Payment];
++    
++    # Sum all payments
++    total_paid = sum([p.amount for p in all_payments if p.transaction_type == "payment"]);
++    
++    # Sum all refunds
++    total_refunded = sum([p.amount for p in all_payments if p.transaction_type == "refund"]);
++    
++    # Return net revenue
++    return total_paid - total_refunded;
++}
++
++
++def:pub customers_by_recent_order() -> list[dict] {
++    ensure_seeded();
++    
++    # Get all users and orders
++    all_users = [root() -->][?:UserProfile];
++    all_orders = [root() -->][?:Order];
++    
++    # Build list of (user, most_recent_order_date) for users with orders
++    user_with_dates: list[tuple] = [];
++    for u in all_users {
++        user_orders = [o for o in all_orders if o.user_id == u.id];
++        if len(user_orders) > 0 {
++            most_recent = max([o.created_at for o in user_orders]);
++            user_with_dates.append((u, most_recent));
++        }
++    }
++    
++    # Sort by most recent order date descending
++    sorted_users = sorted(user_with_dates, key=lambda x: x[1], reverse=True);
++    
++    # Return user dicts
++    return [user_dict(u) for (u, _) in sorted_users];
++}
++
++
++def:pub pending_order_count() -> int {
++    ensure_seeded();
++    
++    # Get all orders and filter by pending status
++    all_orders = [root() -->][?:Order];
++    pending_orders = [o for o in all_orders if o.status == "pending"];
++    
++    return len(pending_orders);
++}
++
++
++def:pub user_with_most_orders() -> str {
++    ensure_seeded();
++    
++    # Get all orders
++    all_orders = [root() -->][?:Order];
++    
++    # Count orders per user_id
++    user_order_counts: dict = {};
++    for o in all_orders {
++        if o.user_id in user_order_counts {
++            user_order_counts[o.user_id] = user_order_counts[o.user_id] + 1;
++        } else {
++            user_order_counts[o.user_id] = 1;
++        }
++    }
++    
++    # Find user_id with maximum count (ties broken arbitrarily)
++    if len(user_order_counts) == 0 {
++        return "";
++    }
++    
++    max_user_id = "";
++    max_count = 0;
++    for user_id in user_order_counts {
++        if user_order_counts[user_id] > max_count {
++            max_count = user_order_counts[user_id];
++            max_user_id = user_id;
++        }
++    }
++    
++    return max_user_id;
++}
++
++
++def:pub recent_orders(limit: int) -> list[dict] {
++    ensure_seeded();
++    
++    # Get all orders
++    all_orders = [root() -->][?:Order];
++    
++    # Sort by created_at descending (newest first)
++    sorted_orders = sorted(all_orders, key=lambda o: o.created_at, reverse=True);
++    
++    # Return top N orders as dicts
++    return [order_dict(o, include_items=False) for o in sorted_orders[:limit]];
++}
++
++
++def:pub most_purchased_products(limit: int) -> list[dict] {
++    ensure_seeded();
++    
++    # Get all order items across all orders
++    all_orders = [root -->][?:Order];
++    all_order_items: list[OrderItem] = [];
++    for o in all_orders {
++        all_order_items.extend([o -->][?:OrderItem]);
++    }
++    
++    # Build a map of product_id -> total_quantity_sold
++    product_quantities: dict = {};
++    
++    for oi in all_order_items {
++        # Skip returned items
++        if oi.returned {
++            continue;
++        }
++        
++        # Find the variant for this order item
++        v = find_variant(oi.variant_id);
++        if v is None {
++            continue;
++        }
++        
++        # Find the product that owns this variant
++        product_found: Product | None = None;
++        for p in [root -->][?:Product] {
++            variants = [p -->][?:Variant];
++            for variant in variants {
++                if variant.id == v.id {
++                    product_found = p;
++                    break;
++                }
++            }
++            if product_found is not None {
++                break;
++            }
++        }
++        
++        if product_found is None {
++            continue;
++        }
++        
++        # Add quantity to product total
++        if product_found.id in product_quantities {
++            product_quantities[product_found.id] = product_quantities[product_found.id] + oi.quantity;
++        } else {
++            product_quantities[product_found.id] = oi.quantity;
++        }
++    }
++    
++    # Build list of (product, total_qty) tuples
++    product_with_qty: list[tuple] = [];
++    for p in [root -->][?:Product] {
++        if p.id in product_quantities {
++            product_with_qty.append((p, product_quantities[p.id]));
++        }
++    }
++    
++    # Sort by quantity descending (highest sales first)
++    sorted_products = sorted(product_with_qty, key=lambda x: x[1], reverse=True);
++    
++    # Return top N products as dicts (with units_sold added)
++    result: list[dict] = [];
++    for (p, qty) in sorted_products[:limit] {
++        prod_dict = product_dict(p, include_variants=False);
++        prod_dict["units_sold"] = qty;
++        result.append(prod_dict);
++    }
++    
++    return result;
++}
+diff --git a/suite/agent/medium/ecommerce/jaclang/app/services/reviews.sv.jac b/suite/agent/medium/ecommerce/jaclang/app/services/reviews.sv.jac
+index 5490262..4501529 100644
+--- a/suite/agent/medium/ecommerce/jaclang/app/services/reviews.sv.jac
++++ b/suite/agent/medium/ecommerce/jaclang/app/services/reviews.sv.jac
+@@ -35,6 +35,9 @@ def:pub add_review(product_id: str, user_id: str, rating: int, title: str = "",
+     if p is None {
+         return {"error": "Product not found", "status": 404};
+     }
++    if rating < 1 or rating > 5 {
++        return {"error": "Rating must be between 1 and 5", "status": 400};
++    }
+ 
+     next_num = len([root() -->][?:Review]);
+     for prod in [root() -->][?:Product] {
+@@ -57,6 +60,20 @@ def:pub add_review(product_id: str, user_id: str, rating: int, title: str = "",
+ }
+ 
+ 
++def:pub list_user_reviews(user_id: str) -> dict {
++    ensure_seeded();
++    user_reviews = [];
++    for prod in [root() -->][?:Product] {
++        for r in [prod -->][?:Review] {
++            if r.user_id == user_id {
++                user_reviews.append(review_dict(r));
++            }
++        }
++    }
++    return {"reviews": user_reviews, "count": len(user_reviews)};
++}
++
++
+ def:pub product_review_summary(product_id: str) -> dict {
+     ensure_seeded();
+     p = find_product(product_id);
+@@ -70,3 +87,29 @@ def:pub product_review_summary(product_id: str) -> dict {
+     avg = sum([r.rating for r in reviews]) / len(reviews);
+     return {"count": len(reviews), "average_rating": int(avg * 100) / 100.0};
+ }
++
++
++def:pub recent_reviews(limit: int) -> dict {
++    ensure_seeded();
++    all_reviews = [];
++    for prod in [root() -->][?:Product] {
++        for r in [prod -->][?:Review] {
++            all_reviews.append(review_dict(r));
++        }
++    }
++    # Manual sort by created_at descending (newest first) using bubble sort
++    n = len(all_reviews);
++    for i in range(n) {
++        for j in range(0, n - i - 1) {
++            if all_reviews[j]["created_at"] < all_reviews[j + 1]["created_at"] {
++                # Swap
++                temp = all_reviews[j];
++                all_reviews[j] = all_reviews[j + 1];
++                all_reviews[j + 1] = temp;
++            }
++        }
++    }
++    # Limit the results
++    limited_reviews = all_reviews[:limit];
++    return {"reviews": limited_reviews, "count": len(limited_reviews)};
++}
+diff --git a/suite/agent/medium/ecommerce/jaclang/app/services/users.sv.jac b/suite/agent/medium/ecommerce/jaclang/app/services/users.sv.jac
+index e40a779..7ad7b03 100644
+--- a/suite/agent/medium/ecommerce/jaclang/app/services/users.sv.jac
++++ b/suite/agent/medium/ecommerce/jaclang/app/services/users.sv.jac
+@@ -94,6 +94,21 @@ def:pub list_addresses(user_id: str) -> list[dict] {
+ }
+ 
+ 
++def:pub get_default_address(user_id: str) -> dict | None {
++    ensure_seeded();
++    u = find_user(user_id);
++    if u is None {
++        return None;
++    }
++    for a in [u -->][?:Address] {
++        if a.is_default {
++            return address_dict(a);
++        }
++    }
++    return None;
++}
++
++
+ def:pub add_address(user_id: str, address1: str, city: str, state: str, zip_code: str, address2: str = "", country: str = "USA") -> dict {
+     ensure_seeded();
+     u = find_user(user_id);
+@@ -163,3 +178,79 @@ def:pub list_payment_methods(user_id: str) -> list[dict] {
+         for pm in [u -->][?:PaymentMethod]
+     ];
+ }
++
++
++def:pub add_payment_method(user_id: str, card_brand: str, last_four: str) -> dict {
++    ensure_seeded();
++    u = find_user(user_id);
++    if u is None {
++        return {"error": "User not found", "status": 404};
++    }
++    existing = [pm for pm in [u -->][?:PaymentMethod]];
++    pm_count = len(existing);
++    pm_id = "pm_" + str(pm_count + 1);
++    new_pm = PaymentMethod(
++        id=pm_id,
++        user_id=user_id,
++        card_brand=card_brand,
++        last_four=last_four,
++        is_default=False,
++    );
++    u ++> new_pm;
++    return {
++        "id": new_pm.id,
++        "user_id": new_pm.user_id,
++        "card_brand": new_pm.card_brand,
++        "last_four": new_pm.last_four,
++        "is_default": new_pm.is_default,
++    };
++}
++
++
++def:pub set_default_payment_method(user_id: str, payment_method_id: str) -> dict {
++    ensure_seeded();
++    u = find_user(user_id);
++    if u is None {
++        return {"error": "User not found", "status": 404};
++    }
++    pm = find_payment_method(user_id, payment_method_id);
++    if pm is None {
++        return {"error": "Payment method not found", "status": 404};
++    }
++    for p in [u -->][?:PaymentMethod] {
++        if p.id == payment_method_id {
++            p.is_default = True;
++        } else {
++            p.is_default = False;
++        }
++    }
++    return {
++        "id": pm.id,
++        "user_id": pm.user_id,
++        "card_brand": pm.card_brand,
++        "last_four": pm.last_four,
++        "is_default": pm.is_default,
++    };
++}
++
++
++def:pub update_username(user_id: str, new_username: str) -> dict {
++    ensure_seeded();
++    u = find_user(user_id);
++    if u is None {
++        return {"error": "User not found", "status": 404};
++    }
++    for other in [root() -->][?:UserProfile] {
++        if other.username == new_username and other.id != user_id {
++            return {"error": "Username already taken", "status": 400};
++        }
++    }
++    u.username = new_username;
++    return user_dict(u);
++}
++
++
++def:pub user_count() -> int {
++    ensure_seeded();
++    return len([root() -->][?:UserProfile]);
++}

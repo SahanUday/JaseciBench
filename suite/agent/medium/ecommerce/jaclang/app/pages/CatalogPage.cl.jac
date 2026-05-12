@@ -18,10 +18,23 @@ def:pub CatalogPage() -> JsxElement {
         loading = False;
     }
 
+    async def select_category(cat_id: str) -> None {
+        selected_cat = cat_id;
+        loading = True;
+        prods_result = await list_products(cat_id);
+        products = prods_result if prods_result else [];
+        loading = False;
+    }
+
     return <div className="max-w-6xl mx-auto px-6 py-8">
         <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Catalog</h1>
             <p className="text-gray-600 mt-1">Browse our products by category.</p>
+        </div>
+
+        <div className="mb-6 flex flex-wrap gap-2">
+            <CategoryButton catId="" label="All" selectedCat={selected_cat} onSelect={select_category} />
+            {[<CategoryButton key={cat["id"]} catId={cat["id"]} label={f"{cat['name']} ({cat['product_count']})"} selectedCat={selected_cat} onSelect={select_category} /> for cat in categories]}
         </div>
 
         {(<p className="text-gray-500">Loading...</p>) if loading else None}
@@ -30,4 +43,17 @@ def:pub CatalogPage() -> JsxElement {
         </div>) if not loading else None}
         {(<p className="text-gray-500 text-center py-12">No products in this category.</p>) if not loading and len(products) == 0 else None}
     </div>;
+}
+
+def CategoryButton(catId: str, label: str, selectedCat: str, onSelect: Any) -> JsxElement {
+    def handle_click(e: MouseEvent) -> None {
+        if onSelect { onSelect(catId); }
+    }
+
+    is_selected = catId == selectedCat;
+    btn_classes = ("bg-blue-600 text-white" if is_selected else "bg-gray-200 text-gray-700") + " px-4 py-2 rounded-lg font-medium hover:opacity-90 transition";
+
+    return <button onClick={handle_click} className={btn_classes}>
+        {label}
+    </button>;
 }

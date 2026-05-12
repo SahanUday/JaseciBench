@@ -94,6 +94,21 @@ def:pub list_addresses(user_id: str) -> list[dict] {
 }
 
 
+def:pub get_default_address(user_id: str) -> dict | None {
+    ensure_seeded();
+    u = find_user(user_id);
+    if u is None {
+        return None;
+    }
+    for a in [u -->][?:Address] {
+        if a.is_default {
+            return address_dict(a);
+        }
+    }
+    return None;
+}
+
+
 def:pub add_address(user_id: str, address1: str, city: str, state: str, zip_code: str, address2: str = "", country: str = "USA") -> dict {
     ensure_seeded();
     u = find_user(user_id);
@@ -162,4 +177,80 @@ def:pub list_payment_methods(user_id: str) -> list[dict] {
         }
         for pm in [u -->][?:PaymentMethod]
     ];
+}
+
+
+def:pub add_payment_method(user_id: str, card_brand: str, last_four: str) -> dict {
+    ensure_seeded();
+    u = find_user(user_id);
+    if u is None {
+        return {"error": "User not found", "status": 404};
+    }
+    existing = [pm for pm in [u -->][?:PaymentMethod]];
+    pm_count = len(existing);
+    pm_id = "pm_" + str(pm_count + 1);
+    new_pm = PaymentMethod(
+        id=pm_id,
+        user_id=user_id,
+        card_brand=card_brand,
+        last_four=last_four,
+        is_default=False,
+    );
+    u ++> new_pm;
+    return {
+        "id": new_pm.id,
+        "user_id": new_pm.user_id,
+        "card_brand": new_pm.card_brand,
+        "last_four": new_pm.last_four,
+        "is_default": new_pm.is_default,
+    };
+}
+
+
+def:pub set_default_payment_method(user_id: str, payment_method_id: str) -> dict {
+    ensure_seeded();
+    u = find_user(user_id);
+    if u is None {
+        return {"error": "User not found", "status": 404};
+    }
+    pm = find_payment_method(user_id, payment_method_id);
+    if pm is None {
+        return {"error": "Payment method not found", "status": 404};
+    }
+    for p in [u -->][?:PaymentMethod] {
+        if p.id == payment_method_id {
+            p.is_default = True;
+        } else {
+            p.is_default = False;
+        }
+    }
+    return {
+        "id": pm.id,
+        "user_id": pm.user_id,
+        "card_brand": pm.card_brand,
+        "last_four": pm.last_four,
+        "is_default": pm.is_default,
+    };
+}
+
+
+def:pub update_username(user_id: str, new_username: str) -> dict {
+    ensure_seeded();
+    u = find_user(user_id);
+    if u is None {
+        return {"error": "User not found", "status": 404};
+    }
+    for other in [root() -->][?:UserProfile] {
+        if other.username == new_username and other.id != user_id {
+            return {"error": "Username already taken", "status": 400};
+        }
+    }
+    u.username = new_username;
+    return user_dict(u);
+}
+
+
+def:pub user_count() -> int {
+    ensure_seeded();
+    return len([root() -->][?:UserProfile]);
 }
