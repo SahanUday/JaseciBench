@@ -1,9 +1,9 @@
 name: ci
 
-# Public-side CI: type-check the calculator app, run its baseline test
-# suite, and validate that every task directory has the public files
-# the agent is expected to read. The hidden grading lives in the vault
-# and runs via grade-pr / grade-submission.
+# Public-side CI: type-check each app, run its baseline test suite, and
+# validate that every task directory has the public files the agent is
+# expected to read. Hidden grading lives in the vault and runs via
+# grade-pr / grade-submission.
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
 
 jobs:
   calculator-baseline:
-    name: calculator app — type check + baseline tests
+    name: "calculator app: type check + baseline tests"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,8 +33,35 @@ jobs:
         working-directory: suite/agent/basic/calculator/jaclang/app
         run: jac test tests/baseline.jac
 
+  ecommerce-baseline:
+    name: "ecommerce app: type check + baseline tests"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install jaclang
+        run: |
+          python -m pip install --upgrade pip
+          pip install "jaclang>=0.14"
+
+      - name: Install npm deps (jac install)
+        working-directory: suite/agent/medium/ecommerce/jaclang/app
+        run: jac install || true
+
+      - name: jac check main.jac
+        working-directory: suite/agent/medium/ecommerce/jaclang/app
+        run: jac check main.jac
+
+      - name: jac test tests/baseline.jac
+        working-directory: suite/agent/medium/ecommerce/jaclang/app
+        run: jac test tests/baseline.jac
+
   validate-task-structure:
-    name: tasks — every task has issue.md + tests.jac
+    name: "tasks: every task has issue.md (calculator also requires tests.jac)"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -44,6 +71,8 @@ jobs:
         run: |
           set -euo pipefail
           missing=0
+          # Calculator requires the legacy tests.jac sample file too;
+          # ecommerce tasks only ship issue.md publicly.
           for d in suite/agent/basic/calculator/jaclang/tasks/*/; do
             for f in issue.md tests.jac; do
               if [ ! -f "$d/$f" ]; then
@@ -52,8 +81,17 @@ jobs:
               fi
             done
           done
+          for tasks_dir in suite/agent/medium/ecommerce/jaclang/tasks; do
+            if [ ! -d "$tasks_dir" ]; then continue; fi
+            for d in "$tasks_dir"/*/; do
+              if [ ! -f "$d/issue.md" ]; then
+                echo "::error file=$d::missing issue.md"
+                missing=$((missing + 1))
+              fi
+            done
+          done
           if [ "$missing" -gt 0 ]; then
             echo "task structure invalid ($missing missing files)"
             exit 1
           fi
-          echo "all tasks have issue.md + tests.jac"
+          echo "all tasks have required public files"

@@ -2,11 +2,17 @@ name: grade-pr
 
 # Maintainer-triggered hidden evaluation of a pull request.
 #
-# Run from the Actions tab: pick "grade-pr" → "Run workflow" → enter
-# the PR number. This workflow resolves the PR's head ref, fires a
+# Run from the Actions tab: pick "grade-pr", "Run workflow", enter the
+# PR number. This workflow resolves the PR's head ref, fires a
 # repository_dispatch into the private vault, and posts a "queued"
 # comment on the PR. Final scores are posted by the vault's
 # grade-submission workflow when grading completes.
+#
+# Grading model: bulk PR. The agent's PR contains their fixes for any
+# subset of the task suite (one PR per agent, not per task). The vault
+# grader runs all tasks' hidden tests against the PR head and posts a
+# per-task results table. Tasks the agent did not fix remain in the
+# bug state baked into the public base, so their tests fail.
 #
 # Why workflow_dispatch and not auto-on-PR: only users with write
 # access to this repo can trigger workflow_dispatch, which keeps
