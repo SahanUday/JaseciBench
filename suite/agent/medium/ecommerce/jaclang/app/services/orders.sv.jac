@@ -1,9 +1,9 @@
 """Orders service: list, view, cancel, return, modify items, update status/address."""
 
 import from datetime { datetime }
-import from models { Order, OrderItem, Payment, Variant }
+import from models { Order, OrderItem, Payment, Variant, UserProfile }
 import from services.catalog { ensure_seeded, find_variant }
-import from services.users { find_payment_method }
+import from services.users { find_payment_method, find_user, user_dict }
 
 
 def find_order(order_id: str) -> Order | None {
@@ -18,6 +18,12 @@ def find_order(order_id: str) -> Order | None {
 
 def order_dict(o: Order, include_items: bool = True) -> dict {
     if not include_items {
+        payments = [o -->][?:Payment];
+        total_paid = sum([
+            p.amount if p.transaction_type == "payment" else -p.amount
+            for p in payments
+        ]);
+        total_paid = round(total_paid, 2);
         return {
             "id": o.id,
             "user_id": o.user_id,
@@ -29,6 +35,8 @@ def order_dict(o: Order, include_items: bool = True) -> dict {
             "shipping_zip": o.shipping_zip,
             "shipping_country": o.shipping_country,
             "created_at": o.created_at,
+            "item_count": len([o -->][?:OrderItem]),
+            "total_paid": total_paid,
         };
     }
     items = [
@@ -80,11 +88,20 @@ def find_order_item(o: Order, oi_id: str) -> OrderItem | None {
 }
 
 
-def:pub list_orders(user_id: str = "") -> list[dict] {
+def:pub list_orders(user_id: str = "", from_date: str = "", to_date: str = "", status: str = "") -> list[dict] {
     ensure_seeded();
     orders = [root() -->][?:Order];
     if user_id {
         orders = [o for o in orders if o.user_id == user_id];
+    }
+    if from_date {
+        orders = [o for o in orders if o.created_at >= from_date];
+    }
+    if to_date {
+        orders = [o for o in orders if o.created_at <= to_date];
+    }
+    if status {
+        orders = [o for o in orders if o.status == status];
     }
     return [order_dict(o, include_items=False) for o in orders];
 }
@@ -105,6 +122,17 @@ def:pub cancel_order(order_id: str) -> dict {
     o = find_order(order_id);
     if o is None {
         return {"error": "Order not found", "status": 404};
+    }
+    
+    if o.status != "pending" {
+        return {"error": "Only pending orders can be cancelled (current status: " + o.status + ")", "status": 400};
+    }
+
+    for oi in [o -->][?:OrderItem] {
+        v = find_variant(oi.variant_id);
+        if v is not None {
+            v.stock_qty = v.stock_qty + oi.quantity;
+        }
     }
 
     now_str = str(datetime.now());
@@ -142,6 +170,9 @@ def:pub return_items(order_id: str, item_ids: list[str], payment_method_id: str)
         oi = find_order_item(o, oi_id);
         if oi is None {
             return {"error": "Order item " + oi_id + " not found in order", "status": 404};
+        }
+        if oi.returned == True {
+            return {"error": "Order item " + oi_id + " is already returned", "status": 400};
         }
         items_to_return.append(oi);
     }
@@ -197,7 +228,7 @@ def:pub modify_order_items(order_id: str, changes: list[dict]) -> dict {
 
         oi = find_order_item(o, oi_id);
         if oi is None {
-            return {"error": "Order item " + oi_id + " not found", "status": 404};
+            return {"error": f"Order item {oi_id} not found", "status": 404};
         }
 
         if new_variant_id and new_variant_id != oi.variant_id {
@@ -227,6 +258,17 @@ def:pub modify_order_items(order_id: str, changes: list[dict]) -> dict {
                 v.stock_qty = v.stock_qty - diff;
             }
             oi.quantity = new_quantity;
+        }
+    }
+
+    new_total = 0.0;
+    for oi in [o -->][?:OrderItem] {
+        new_total = new_total + (oi.price_snapshot * oi.quantity);
+    }
+    new_total_rounded = int(new_total * 100) / 100.0;
+    for pay in [o -->][?:Payment] {
+        if pay.transaction_type == "payment" {
+            pay.amount = new_total_rounded;
         }
     }
 
@@ -264,4 +306,171 @@ def:pub update_order_status(order_id: str, new_status: str) -> dict {
     }
     o.status = new_status;
     return {"id": o.id, "status": o.status};
+}
+
+
+def:pub get_user_spend(user_id: str) -> dict {
+    ensure_seeded();
+    orders = [o for o in [root() -->][?:Order] if o.user_id == user_id];
+    
+    total_paid = 0.0;
+    total_refunded = 0.0;
+    
+    for o in orders {
+        for p in [o -->][?:Payment] {
+            if p.transaction_type == "payment" {
+                total_paid = total_paid + p.amount;
+            } elif p.transaction_type == "refund" {
+                total_refunded = total_refunded + p.amount;
+            }
+        }
+    }
+    
+    net_spent = total_paid - total_refunded;
+    
+    return {
+        "total_paid": total_paid,
+        "total_refunded": total_refunded,
+        "net_spent": net_spent,
+    };
+}
+
+
+def:pub users_with_min_orders(min_count: int) -> list[dict] {
+    ensure_seeded();
+    all_users = [root() -->][?:UserProfile];
+    all_orders = [root() -->][?:Order];
+    
+    # Count orders per user
+    user_order_counts = {};
+    for o in all_orders {
+        if o.user_id in user_order_counts {
+            user_order_counts[o.user_id] += 1;
+        } else {
+            user_order_counts[o.user_id] = 1;
+        }
+    }
+    
+    # Filter users with at least min_count orders
+    result = [];
+    for u in all_users {
+        order_count = 0;
+        if u.id in user_order_counts {
+            order_count = user_order_counts[u.id];
+        }
+        if order_count >= min_count {
+            result.append(user_dict(u));
+        }
+    }
+    
+    return result;
+}
+
+
+def:pub total_revenue() -> float {
+    ensure_seeded();
+    all_orders = [root() -->][?:Order];
+    
+    revenue = 0.0;
+    for o in all_orders {
+        for p in [o -->][?:Payment] {
+            if p.transaction_type == "payment" {
+                revenue = revenue + p.amount;
+            } elif p.transaction_type == "refund" {
+                revenue = revenue - p.amount;
+            }
+        }
+    }
+    
+    return round(revenue, 2);
+}
+
+
+def:pub customers_by_recent_order() -> list[dict] {
+    ensure_seeded();
+    orders = [root() -->][?:Order];
+    
+    # Group orders by user_id and find most recent order for each user
+    user_to_most_recent: dict[str, str] = {};  # user_id -> created_at
+    
+    for o in orders {
+        if o.user_id not in user_to_most_recent or o.created_at > user_to_most_recent[o.user_id] {
+            user_to_most_recent[o.user_id] = o.created_at;
+        }
+    }
+    
+    # Create list of (user_id, most_recent_order_date) tuples and sort descending
+    user_date_pairs: list[tuple[str, str]] = [];
+    for uid in user_to_most_recent {
+        user_date_pairs.append((uid, user_to_most_recent[uid]));
+    }
+    user_date_pairs.sort(key=lambda pair: pair[1], reverse=True);
+    
+    # Get user profiles and return user_dict format
+    result: list[dict] = [];
+    for pair in user_date_pairs {
+        u = find_user(pair[0]);
+        if u is not None {
+            result.append(user_dict(u));
+        }
+    }
+    
+    return result;
+}
+
+
+def:pub pending_order_count() -> int {
+    ensure_seeded();
+    orders = [root() -->][?:Order];
+    count = 0;
+    for o in orders {
+        if o.status == "pending" {
+            count = count + 1;
+        }
+    }
+    return count;
+}
+
+
+def:pub user_with_most_orders() -> str {
+    ensure_seeded();
+    all_orders = [root() -->][?:Order];
+    
+    # Count orders per user
+    user_order_counts: dict[str, int] = {};
+    for o in all_orders {
+        if o.user_id in user_order_counts {
+            user_order_counts[o.user_id] += 1;
+        } else {
+            user_order_counts[o.user_id] = 1;
+        }
+    }
+    
+    # Find user with most orders
+    max_count = 0;
+    max_user_id = "";
+    for user_id in user_order_counts {
+        if user_order_counts[user_id] > max_count {
+            max_count = user_order_counts[user_id];
+            max_user_id = user_id;
+        }
+    }
+    
+    return max_user_id;
+}
+
+
+def:pub recent_orders(limit: int) -> list[dict] {
+    ensure_seeded();
+    orders = [root() -->][?:Order];
+    
+    # Sort by created_at descending (newest first)
+    orders.sort(key=lambda o: o.created_at, reverse=True);
+    
+    # Limit to requested number
+    if limit > 0 and len(orders) > limit {
+        orders = orders[:limit];
+    }
+    
+    return [order_dict(o, include_items=False) for o in orders];
 }

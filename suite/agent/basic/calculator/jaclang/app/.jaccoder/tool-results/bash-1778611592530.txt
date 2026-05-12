@@ -1,0 +1,613 @@
+
+The following directories will be removed:
+
+  data: /tmp/jasecibench/suite/agent/basic/calculator/jaclang/app/.jac/data
+
+Continue? [y/N] 
+Aborted.
+STDERR:
+EEEEEEEEEE
+======================================================================
+ERROR: unittest.case.FunctionTestCase (test_compute_add)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 952, in test_deco
+    proxy_methods = {};
+                ^^^^^^^^
+  File "/tmp/jasecibench/suite/agent/basic/calculator/jaclang/app/tests/baseline.jac", line 6, in test_compute_add
+    root() spawn ClearHistory();
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 602, in spawn
+    Called by sv_client.call() to perform the actual HTTP request to a
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 426, in spawn_call
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 394, in _visit_node_recursive
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 353, in _execute_entries
+    file: (str | None),
+            ^^^^^^^^^^^^
+  File "/tmp/jasecibench/suite/agent/basic/calculator/jaclang/app/server/compute.sv.jac", line 89, in collect
+    visit [-->];
+           ^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1054, in refs
+    # this attribute directly.
+                 ^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 251, in edges_to_nodes
+    `walker: WalkerAnchor,
+                           
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/archetype.jac", line 110, in __getattr__
+    has archetype: NodeArchetype,
+                ^^^^^^^^^^^^^^^^^^
+ValueError: EdgeAnchor [a8a80f7a-92ad-4cf2-b7f3-d345a4a54bb4] is not a validreference!
+
+======================================================================
+ERROR: unittest.case.FunctionTestCase (test_compute_subtract)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 952, in test_deco
+    proxy_methods = {};
+                ^^^^^^^^
+  File "/tmp/jasecibench/suite/agent/basic/calculator/jaclang/app/tests/baseline.jac", line 14, in test_compute_subtract
+    root() spawn ClearHistory();
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 602, in spawn
+    Called by sv_client.call() to perform the actual HTTP request to a
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 426, in spawn_call
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 394, in _visit_node_recursive
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 353, in _execute_entries
+    file: (str | None),
+            ^^^^^^^^^^^^
+  File "/tmp/jasecibench/suite/agent/basic/calculator/jaclang/app/server/compute.sv.jac", line 89, in collect
+    visit [-->];
+           ^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1054, in refs
+    # this attribute directly.
+                 ^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 251, in edges_to_nodes
+    `walker: WalkerAnchor,
+                           
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/archetype.jac", line 110, in __getattr__
+    has archetype: NodeArchetype,
+                ^^^^^^^^^^^^^^^^^^
+ValueError: EdgeAnchor [a8a80f7a-92ad-4cf2-b7f3-d345a4a54bb4] is not a validreference!
+
+======================================================================
+ERROR: unittest.case.FunctionTestCase (test_compute_multiply)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 952, in test_deco
+    proxy_methods = {};
+                ^^^^^^^^
+  File "/tmp/jasecibench/suite/agent/basic/calculator/jaclang/app/tests/baseline.jac", line 21, in test_compute_multiply
+    root() spawn ClearHistory();
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 602, in spawn
+    Called by sv_client.call() to perform the actual HTTP request to a
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 426, in spawn_call
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 394, in _visit_node_recursive
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 353, in _execute_entries
+    file: (str | None),
+            ^^^^^^^^^^^^
+  File "/tmp/jasecibench/suite/agent/basic/calculator/jaclang/app/server/compute.sv.jac", line 89, in collect
+    visit [-->];
+           ^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1054, in refs
+    # this attribute directly.
+                 ^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 251, in edges_to_nodes
+    `walker: WalkerAnchor,
+                           
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/archetype.jac", line 110, in __getattr__
+    has archetype: NodeArchetype,
+                ^^^^^^^^^^^^^^^^^^
+ValueError: EdgeAnchor [a8a80f7a-92ad-4cf2-b7f3-d345a4a54bb4] is not a validreference!
+
+======================================================================
+ERROR: unittest.case.FunctionTestCase (test_compute_divide)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 952, in test_deco
+    proxy_methods = {};
+                ^^^^^^^^
+  File "/tmp/jasecibench/suite/agent/basic/calculator/jaclang/app/tests/baseline.jac", line 28, in test_compute_divide
+    root() spawn ClearHistory();
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 602, in spawn
+    Called by sv_client.call() to perform the actual HTTP request to a
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 426, in spawn_call
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 394, in _visit_node_recursive
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 353, in _execute_entries
+    file: (str | None),
+            ^^^^^^^^^^^^
+  File "/tmp/jasecibench/suite/agent/basic/calculator/jaclang/app/server/compute.sv.jac", line 89, in collect
+    visit [-->];
+           ^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1054, in refs
+    # this attribute directly.
+                 ^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 251, in edges_to_nodes
+    `walker: WalkerAnchor,
+                           
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/archetype.jac", line 110, in __getattr__
+    has archetype: NodeArchetype,
+                ^^^^^^^^^^^^^^^^^^
+ValueError: EdgeAnchor [a8a80f7a-92ad-4cf2-b7f3-d345a4a54bb4] is not a validreference!
+
+======================================================================
+ERROR: unittest.case.FunctionTestCase (test_compute_reports_error_on_division_by_zero_instead_of_raising)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 952, in test_deco
+    proxy_methods = {};
+                ^^^^^^^^
+  File "/tmp/jasecibench/suite/agent/basic/calculator/jaclang/app/tests/baseline.jac", line 39, in test_compute_reports_error_on_division_by_zero_instead_of_raising
+    root() spawn ClearHistory();
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 602, in spawn
+    Called by sv_client.call() to perform the actual HTTP request to a
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 426, in spawn_call
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 394, in _visit_node_recursive
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 353, in _execute_entries
+    file: (str | None),
+            ^^^^^^^^^^^^
+  File "/tmp/jasecibench/suite/agent/basic/calculator/jaclang/app/server/compute.sv.jac", line 89, in collect
+    visit [-->];
+           ^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1054, in refs
+    # this attribute directly.
+                 ^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 251, in edges_to_nodes
+    `walker: WalkerAnchor,
+                           
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/archetype.jac", line 110, in __getattr__
+    has archetype: NodeArchetype,
+                ^^^^^^^^^^^^^^^^^^
+ValueError: EdgeAnchor [a8a80f7a-92ad-4cf2-b7f3-d345a4a54bb4] is not a validreference!
+
+======================================================================
+ERROR: unittest.case.FunctionTestCase (test_compute_reports_error_on_unknown_operator)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 952, in test_deco
+    proxy_methods = {};
+                ^^^^^^^^
+  File "/tmp/jasecibench/suite/agent/basic/calculator/jaclang/app/tests/baseline.jac", line 46, in test_compute_reports_error_on_unknown_operator
+    root() spawn ClearHistory();
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 602, in spawn
+    Called by sv_client.call() to perform the actual HTTP request to a
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 426, in spawn_call
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 394, in _visit_node_recursive
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 353, in _execute_entries
+    file: (str | None),
+            ^^^^^^^^^^^^
+  File "/tmp/jasecibench/suite/agent/basic/calculator/jaclang/app/server/compute.sv.jac", line 89, in collect
+    visit [-->];
+           ^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1054, in refs
+    # this attribute directly.
+                 ^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 251, in edges_to_nodes
+    `walker: WalkerAnchor,
+                           
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/archetype.jac", line 110, in __getattr__
+    has archetype: NodeArchetype,
+                ^^^^^^^^^^^^^^^^^^
+ValueError: EdgeAnchor [a8a80f7a-92ad-4cf2-b7f3-d345a4a54bb4] is not a validreference!
+
+======================================================================
+ERROR: unittest.case.FunctionTestCase (test_errored_compute_is_not_persisted_to_history)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 952, in test_deco
+    proxy_methods = {};
+                ^^^^^^^^
+  File "/tmp/jasecibench/suite/agent/basic/calculator/jaclang/app/tests/baseline.jac", line 53, in test_errored_compute_is_not_persisted_to_history
+    root() spawn ClearHistory();
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 602, in spawn
+    Called by sv_client.call() to perform the actual HTTP request to a
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 426, in spawn_call
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 394, in _visit_node_recursive
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 353, in _execute_entries
+    file: (str | None),
+            ^^^^^^^^^^^^
+  File "/tmp/jasecibench/suite/agent/basic/calculator/jaclang/app/server/compute.sv.jac", line 89, in collect
+    visit [-->];
+           ^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1054, in refs
+    # this attribute directly.
+                 ^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 251, in edges_to_nodes
+    `walker: WalkerAnchor,
+                           
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/archetype.jac", line 110, in __getattr__
+    has archetype: NodeArchetype,
+                ^^^^^^^^^^^^^^^^^^
+ValueError: EdgeAnchor [a8a80f7a-92ad-4cf2-b7f3-d345a4a54bb4] is not a validreference!
+
+======================================================================
+ERROR: unittest.case.FunctionTestCase (test_history_is_empty_for_a_fresh_root)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 952, in test_deco
+    proxy_methods = {};
+                ^^^^^^^^
+  File "/tmp/jasecibench/suite/agent/basic/calculator/jaclang/app/tests/baseline.jac", line 65, in test_history_is_empty_for_a_fresh_root
+    root() spawn ClearHistory();
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 602, in spawn
+    Called by sv_client.call() to perform the actual HTTP request to a
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 426, in spawn_call
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 394, in _visit_node_recursive
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 353, in _execute_entries
+    file: (str | None),
+            ^^^^^^^^^^^^
+  File "/tmp/jasecibench/suite/agent/basic/calculator/jaclang/app/server/compute.sv.jac", line 89, in collect
+    visit [-->];
+           ^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1054, in refs
+    # this attribute directly.
+                 ^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 251, in edges_to_nodes
+    `walker: WalkerAnchor,
+                           
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/archetype.jac", line 110, in __getattr__
+    has archetype: NodeArchetype,
+                ^^^^^^^^^^^^^^^^^^
+ValueError: EdgeAnchor [a8a80f7a-92ad-4cf2-b7f3-d345a4a54bb4] is not a validreference!
+
+======================================================================
+ERROR: unittest.case.FunctionTestCase (test_history_records_successful_computes_in_order)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 952, in test_deco
+    proxy_methods = {};
+                ^^^^^^^^
+  File "/tmp/jasecibench/suite/agent/basic/calculator/jaclang/app/tests/baseline.jac", line 71, in test_history_records_successful_computes_in_order
+    root() spawn ClearHistory();
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 602, in spawn
+    Called by sv_client.call() to perform the actual HTTP request to a
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 426, in spawn_call
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 394, in _visit_node_recursive
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 353, in _execute_entries
+    file: (str | None),
+            ^^^^^^^^^^^^
+  File "/tmp/jasecibench/suite/agent/basic/calculator/jaclang/app/server/compute.sv.jac", line 89, in collect
+    visit [-->];
+           ^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1054, in refs
+    # this attribute directly.
+                 ^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 251, in edges_to_nodes
+    `walker: WalkerAnchor,
+                           
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/archetype.jac", line 110, in __getattr__
+    has archetype: NodeArchetype,
+                ^^^^^^^^^^^^^^^^^^
+ValueError: EdgeAnchor [a8a80f7a-92ad-4cf2-b7f3-d345a4a54bb4] is not a validreference!
+
+======================================================================
+ERROR: unittest.case.FunctionTestCase (test_clear_history_empties_history_and_reports_the_count_deleted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 952, in test_deco
+    proxy_methods = {};
+                ^^^^^^^^
+  File "/tmp/jasecibench/suite/agent/basic/calculator/jaclang/app/tests/baseline.jac", line 81, in test_clear_history_empties_history_and_reports_the_count_deleted
+    root() spawn ClearHistory();
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 602, in spawn
+    Called by sv_client.call() to perform the actual HTTP request to a
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 426, in spawn_call
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 394, in _visit_node_recursive
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 353, in _execute_entries
+    file: (str | None),
+            ^^^^^^^^^^^^
+  File "/tmp/jasecibench/suite/agent/basic/calculator/jaclang/app/server/compute.sv.jac", line 89, in collect
+    visit [-->];
+           ^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1054, in refs
+    # this attribute directly.
+                 ^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 1978, in proxy
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 92, in __call__
+    _name2plugin: dict[(str, object)] by postinit,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/plugin.jac", line 87, in _call_impl
+    class HookRelay {}
+                   ^^^^
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/runtime.jac", line 251, in edges_to_nodes
+    `walker: WalkerAnchor,
+                           
+  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/jaclang/jac0core/archetype.jac", line 110, in __getattr__
+    has archetype: NodeArchetype,
+                ^^^^^^^^^^^^^^^^^^
+ValueError: EdgeAnchor [a8a80f7a-92ad-4cf2-b7f3-d345a4a54bb4] is not a validreference!
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.024s
+
+FAILED (errors=10)

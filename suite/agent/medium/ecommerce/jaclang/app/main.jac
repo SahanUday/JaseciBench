@@ -16,6 +16,7 @@ import from services.cart { get_cart, add_to_cart, update_cart_item, remove_from
 import from services.orders {
     list_orders, get_order, cancel_order, update_order_status,
     return_items, modify_order_items, update_order_address,
+    customers_by_recent_order,
 }
 
 

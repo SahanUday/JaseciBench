@@ -1,0 +1,2242 @@
+{
+  "valid": false,
+  "errors": [
+    {
+      "line": 28,
+      "col": 21,
+      "message": "Type is Unknown, cannot access attribute \"id\""
+    },
+    {
+      "line": 29,
+      "col": 26,
+      "message": "Type is Unknown, cannot access attribute \"user_id\""
+    },
+    {
+      "line": 30,
+      "col": 25,
+      "message": "Type is Unknown, cannot access attribute \"status\""
+    },
+    {
+      "line": 31,
+      "col": 36,
+      "message": "Type is Unknown, cannot access attribute \"shipping_address1\""
+    },
+    {
+      "line": 32,
+      "col": 36,
+      "message": "Type is Unknown, cannot access attribute \"shipping_address2\""
+    },
+    {
+      "line": 33,
+      "col": 32,
+      "message": "Type is Unknown, cannot access attribute \"shipping_city\""
+    },
+    {
+      "line": 34,
+      "col": 33,
+      "message": "Type is Unknown, cannot access attribute \"shipping_state\""
+    },
+    {
+      "line": 35,
+      "col": 31,
+      "message": "Type is Unknown, cannot access attribute \"shipping_zip\""
+    },
+    {
+      "line": 36,
+      "col": 35,
+      "message": "Type is Unknown, cannot access attribute \"shipping_country\""
+    },
+    {
+      "line": 37,
+      "col": 29,
+      "message": "Type is Unknown, cannot access attribute \"created_at\""
+    },
+    {
+      "line": 49,
+      "col": 25,
+      "message": "No matching overload found for method \"__mul__\" with the given arguments"
+    },
+    {
+      "line": 64,
+      "col": 17,
+      "message": "Type is Unknown, cannot access attribute \"id\""
+    },
+    {
+      "line": 65,
+      "col": 22,
+      "message": "Type is Unknown, cannot access attribute \"user_id\""
+    },
+    {
+      "line": 66,
+      "col": 21,
+      "message": "Type is Unknown, cannot access attribute \"status\""
+    },
+    {
+      "line": 67,
+      "col": 32,
+      "message": "Type is Unknown, cannot access attribute \"shipping_address1\""
+    },
+    {
+      "line": 68,
+      "col": 32,
+      "message": "Type is Unknown, cannot access attribute \"shipping_address2\""
+    },
+    {
+      "line": 69,
+      "col": 28,
+      "message": "Type is Unknown, cannot access attribute \"shipping_city\""
+    },
+    {
+      "line": 70,
+      "col": 29,
+      "message": "Type is Unknown, cannot access attribute \"shipping_state\""
+    },
+    {
+      "line": 71,
+      "col": 27,
+      "message": "Type is Unknown, cannot access attribute \"shipping_zip\""
+    },
+    {
+      "line": 72,
+      "col": 31,
+      "message": "Type is Unknown, cannot access attribute \"shipping_country\""
+    },
+    {
+      "line": 73,
+      "col": 25,
+      "message": "Type is Unknown, cannot access attribute \"created_at\""
+    },
+    {
+      "line": 127,
+      "col": 10,
+      "message": "Type is Unknown, cannot access attribute \"status\""
+    },
+    {
+      "line": 128,
+      "col": 87,
+      "message": "Type is Unknown, cannot access attribute \"status\""
+    },
+    {
+      "line": 128,
+      "col": 26,
+      "message": "No matching overload found for method \"__add__\" with the given arguments"
+    },
+    {
+      "line": 128,
+      "col": 26,
+      "message": "No matching overload found for method \"__add__\" with the given arguments"
+    },
+    {
+      "line": 134,
+      "col": 15,
+      "message": "Type is Unknown, cannot access attribute \"stock_qty\""
+    },
+    {
+      "line": 134,
+      "col": 29,
+      "message": "Type is Unknown, cannot access attribute \"stock_qty\""
+    },
+    {
+      "line": 134,
+      "col": 27,
+      "message": "No matching overload found for method \"__add__\" with the given arguments"
+    },
+    {
+      "line": 144,
+      "col": 20,
+      "message": "No matching overload found for method \"__add__\" with the given arguments"
+    },
+    {
+      "line": 144,
+      "col": 20,
+      "message": "No matching overload found for method \"__add__\" with the given arguments"
+    },
+    {
+      "line": 144,
+      "col": 20,
+      "message": "No matching overload found for method \"__add__\" with the given arguments"
+    },
+    {
+      "line": 164,
+      "col": 10,
+      "message": "Type is Unknown, cannot access attribute \"status\""
+    },
+    {
+      "line": 165,
+      "col": 88,
+      "message": "Type is Unknown, cannot access attribute \"status\""
+    },
+    {
+      "line": 165,
+      "col": 26,
+      "message": "No matching overload found for method \"__add__\" with the given arguments"
+    },
+    {
+      "line": 165,
+      "col": 26,
+      "message": "No matching overload found for method \"__add__\" with the given arguments"
+    },
+    {
+      "line": 174,
+      "col": 15,
+      "message": "Type is Unknown, cannot access attribute \"returned\""
+    },
+    {
+      "line": 182,
+      "col": 12,
+      "message": "Type is Unknown, cannot access attribute \"returned\""
+    },
+    {
+      "line": 183,
+      "col": 29,
+      "message": "Type is Unknown, cannot access attribute \"variant_id\""
+    },
+    {
+      "line": 185,
+      "col": 15,
+      "message": "Type is Unknown, cannot access attribute \"stock_qty\""
+    },
+    {
+      "line": 185,
+      "col": 29,
+      "message": "Type is Unknown, cannot access attribute \"stock_qty\""
+    },
+    {
+      "line": 185,
+      "col": 44,
+      "message": "Type is Unknown, cannot access attribute \"quantity\""
+    },
+    {
+      "line": 185,
+      "col": 27,
+      "message": "No matching overload found for method \"__add__\" with the given arguments"
+    },
+    {
+      "line": 187,
+      "col": 43,
+      "message": "Type is Unknown, cannot access attribute \"price_snapshot\""
+    },
+    {
+      "line": 187,
+      "col": 63,
+      "message": "Type is Unknown, cannot access attribute \"quantity\""
+    },
+    {
+      "line": 187,
+      "col": 40,
+      "message": "No matching overload found for method \"__mul__\" with the given arguments"
+    },
+    {
+      "line": 187,
+      "col": 24,
+      "message": "No matching overload found for method \"__add__\" with the given arguments"
+    },
+    {
+      "line": 193,
+      "col": 26,
+      "message": "Type is Unknown, cannot access attribute \"id\""
+    },
+    {
+      "line": 193,
+      "col": 12,
+      "message": "No matching overload found for method \"__add__\" with the given arguments"
+    },
+    {
+      "line": 193,
+      "col": 12,
+      "message": "No matching overload found for method \"__add__\" with the given arguments"
+    },
+    {
+      "line": 193,
+      "col": 12,
+      "message": "No matching overload found for method \"__add__\" with the given arguments"
+    },
+    {
+      "line": 220,
+      "col": 10,
+      "message": "Type is Unknown, cannot access attribute \"status\""
+    },
+    {
+      "line": 221,
+      "col": 86,
+      "message": "Type is Unknown, cannot access attribute \"status\""
+    },
+    {
+      "line": 221,
+      "col": 26,
+      "message": "No matching overload found for method \"__add__\" with the given arguments"
+    },
+    {
+      "line": 221,
+      "col": 26,
+      "message": "No matching overload found for method \"__add__\" with the given arguments"
+    },
+    {
+      "line": 234,
+      "col": 52,
+      "message": "Type is Unknown, cannot access attribute \"variant_id\""
+    },
+    {
+      "line": 239,
+      "col": 63,
+      "message": "Type is Unknown, cannot access attribute \"quantity\""
+    },
+    {
+      "line": 240,
+      "col": 22,
+      "message": "Type is Unknown, cannot access attribute \"stock_qty\""
+    },
+    {
+      "line": 243,
+      "col": 37,
+      "message": "Type is Unknown, cannot access attribute \"variant_id\""
+    },
+    {
+      "line": 245,
+      "col": 23,
+      "message": "Type is Unknown, cannot access attribute \"stock_qty\""
+    },
+    {
+      "line": 245,
+      "col": 41,
+      "message": "Type is Unknown, cannot access attribute \"stock_qty\""
+    },
+    {
+      "line": 245,
+      "col": 56,
+      "message": "Type is Unknown, cannot access attribute \"quantity\""
+    },
+    {
+      "line": 245,
+      "col": 35,
+      "message": "No matching overload found for method \"__add__\" with the given arguments"
+    },
+    {
+      "line": 247,
+      "col": 19,
+      "message": "Type is Unknown, cannot access attribute \"stock_qty\""
+    },
+    {
+      "line": 247,
+      "col": 37,
+      "message": "Type is Unknown, cannot access attribute \"stock_qty\""
+    },
+    {
+      "line": 247,
+      "col": 31,
+      "message": "No matching overload found for method \"__sub__\" with the given arguments"
+    },
+    {
+      "line": 249,
+      "col": 39,
+      "message": "Type is Unknown, cannot access attribute \"price\""
+    },
+    {
+      "line": 253,
+      "col": 20,
+      "message": "No matching overload found for method \"__sub__\" with the given arguments"
+    },
+    {
+      "line": 254,
+      "col": 49,
+      "message": "Type is Unknown, cannot access attribute \"stock_qty\""
+    },
+    {
+      "line": 255,
+      "col": 34,
+      "message": "No matching overload found for method \"__add__\" with the given arguments"
+    },
+    {
+      "line": 258,
+      "col": 19,
+      "message": "Type is Unknown, cannot access attribute \"stock_qty\""
+    },
+    {
+      "line": 258,
+      "col": 33,
+      "message": "Type is Unknown, cannot access attribute \"stock_qty\""
+    },
+    {
+      "line": 258,
+      "col": 31,
+      "message": "No matching overload found for method \"__sub__\" with the given arguments"
+    },
+    {
+      "line": 266,
+      "col": 34,
+      "message": "No matching overload found for method \"__mul__\" with the given arguments"
+    },
+    {
+      "line": 266,
+      "col": 21,
+      "message": "No matching overload found for method \"__add__\" with the given arguments"
+    },
+    {
+      "line": 285,
+      "col": 10,
+      "message": "Type is Unknown, cannot access attribute \"status\""
+    },
+    {
+      "line": 286,
+      "col": 96,
+      "message": "Type is Unknown, cannot access attribute \"status\""
+    },
+    {
+      "line": 286,
+      "col": 26,
+      "message": "No matching overload found for method \"__add__\" with the given arguments"
+    },
+    {
+      "line": 286,
+      "col": 26,
+      "message": "No matching overload found for method \"__add__\" with the given arguments"
+    },
+    {
+      "line": 288,
+      "col": 7,
+      "message": "Type is Unknown, cannot access attribute \"shipping_address1\""
+    },
+    {
+      "line": 289,
+      "col": 7,
+      "message": "Type is Unknown, cannot access attribute \"shipping_address2\""
+    },
+    {
+      "line": 290,
+      "col": 7,
+      "message": "Type is Unknown, cannot access attribute \"shipping_city\""
+    },
+    {
+      "line": 291,
+      "col": 7,
+      "message": "Type is Unknown, cannot access attribute \"shipping_state\""
+    },
+    {
+      "line": 292,
+      "col": 7,
+      "message": "Type is Unknown, cannot access attribute \"shipping_zip\""
+    },
+    {
+      "line": 293,
+      "col": 7,
+      "message": "Type is Unknown, cannot access attribute \"shipping_country\""
+    },
+    {
+      "line": 307,
+      "col": 7,
+      "message": "Type is Unknown, cannot access attribute \"status\""
+    },
+    {
+      "line": 308,
+      "col": 21,
+      "message": "Type is Unknown, cannot access attribute \"id\""
+    },
+    {
+      "line": 308,
+      "col": 37,
+      "message": "Type is Unknown, cannot access attribute \"status\""
+    },
+    {
+      "line": 322,
+      "col": 30,
+      "message": "No matching overload found for method \"__add__\" with the given arguments"
+    },
+    {
+      "line": 324,
+      "col": 34,
+      "message": "No matching overload found for method \"__add__\" with the given arguments"
+    },
+    {
+      "line": 378,
+      "col": 27,
+      "message": "No matching overload found for method \"__add__\" with the given arguments"
+    },
+    {
+      "line": 380,
+      "col": 27,
+      "message": "No matching overload found for method \"__sub__\" with the given arguments"
+    },
+    {
+      "line": 385,
+      "col": 12,
+      "message": "No matching overload found for the function call with the given arguments"
+    },
+    {
+      "line": 385,
+      "col": 5,
+      "message": "Cannot return <Unknown>, expected float"
+    },
+    {
+      "line": 407,
+      "col": 5,
+      "message": "No matching overload found for the function call with the given arguments"
+    },
+    {
+      "line": 414,
+      "col": 27,
+      "message": "Cannot assign <Unknown> to parameter 'object' of type dict"
+    }
+  ],
+  "warnings": [
+    {
+      "line": 4,
+      "col": 13,
+      "message": "Module not found"
+    },
+    {
+      "line": 5,
+      "col": 22,
+      "message": "Module not found"
+    },
+    {
+      "line": 6,
+      "col": 22,
+      "message": "Module not found"
+    },
+    {
+      "line": 9,
+      "col": 34,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 10,
+      "col": 15,
+      "message": "'root()' is deprecated. Use bare 'root' instead."
+    },
+    {
+      "line": 10,
+      "col": 29,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 10,
+      "col": 26,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 11,
+      "col": 12,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 19,
+      "col": 19,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 21,
+      "col": 30,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 21,
+      "col": 27,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 23,
+      "col": 13,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 23,
+      "col": 25,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 23,
+      "col": 63,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 23,
+      "col": 62,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 28,
+      "col": 19,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 28,
+      "col": 19,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 29,
+      "col": 24,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 29,
+      "col": 24,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 30,
+      "col": 23,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 30,
+      "col": 23,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 31,
+      "col": 34,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 31,
+      "col": 34,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 32,
+      "col": 34,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 32,
+      "col": 34,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 33,
+      "col": 30,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 33,
+      "col": 30,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 34,
+      "col": 31,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 34,
+      "col": 31,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 35,
+      "col": 29,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 35,
+      "col": 29,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 36,
+      "col": 33,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 36,
+      "col": 33,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 37,
+      "col": 27,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 37,
+      "col": 27,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 38,
+      "col": 41,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 38,
+      "col": 38,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 51,
+      "col": 29,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 51,
+      "col": 26,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 44,
+      "col": 19,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 45,
+      "col": 25,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 46,
+      "col": 31,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 47,
+      "col": 27,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 48,
+      "col": 25,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 49,
+      "col": 25,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 49,
+      "col": 45,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 49,
+      "col": 25,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 61,
+      "col": 28,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 61,
+      "col": 25,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 55,
+      "col": 19,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 56,
+      "col": 23,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 57,
+      "col": 33,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 58,
+      "col": 34,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 59,
+      "col": 27,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 64,
+      "col": 15,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 64,
+      "col": 15,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 65,
+      "col": 20,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 65,
+      "col": 20,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 66,
+      "col": 19,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 66,
+      "col": 19,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 67,
+      "col": 30,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 67,
+      "col": 30,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 68,
+      "col": 30,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 68,
+      "col": 30,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 69,
+      "col": 26,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 69,
+      "col": 26,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 70,
+      "col": 27,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 70,
+      "col": 27,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 71,
+      "col": 25,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 71,
+      "col": 25,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 72,
+      "col": 29,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 72,
+      "col": 29,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 73,
+      "col": 23,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 73,
+      "col": 23,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 76,
+      "col": 23,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 19,
+      "col": 57,
+      "message": "Generic type \"dict\" used without type arguments, defaulting to \"dict[Any]\"; consider adding explicit type arguments"
+    },
+    {
+      "line": 81,
+      "col": 24,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 81,
+      "col": 46,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 82,
+      "col": 25,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 82,
+      "col": 22,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 83,
+      "col": 12,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 92,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 92,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 93,
+      "col": 15,
+      "message": "'root()' is deprecated. Use bare 'root' instead."
+    },
+    {
+      "line": 93,
+      "col": 29,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 93,
+      "col": 26,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 95,
+      "col": 40,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 98,
+      "col": 40,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 101,
+      "col": 40,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 104,
+      "col": 40,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 111,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 111,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 116,
+      "col": 23,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 110,
+      "col": 37,
+      "message": "Generic type \"dict\" used without type arguments, defaulting to \"dict[Any]\"; consider adding explicit type arguments"
+    },
+    {
+      "line": 121,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 121,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 127,
+      "col": 8,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 127,
+      "col": 8,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 128,
+      "col": 85,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 128,
+      "col": 85,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 128,
+      "col": 26,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 128,
+      "col": 26,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 131,
+      "col": 25,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 131,
+      "col": 22,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 132,
+      "col": 26,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 132,
+      "col": 13,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 132,
+      "col": 13,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 134,
+      "col": 13,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 134,
+      "col": 13,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 134,
+      "col": 27,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 134,
+      "col": 27,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 134,
+      "col": 41,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 134,
+      "col": 27,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 140,
+      "col": 26,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 140,
+      "col": 23,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 141,
+      "col": 12,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 144,
+      "col": 32,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 144,
+      "col": 20,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 144,
+      "col": 20,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 144,
+      "col": 20,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 145,
+      "col": 24,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 147,
+      "col": 35,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 143,
+      "col": 19,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 143,
+      "col": 19,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 153,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 120,
+      "col": 40,
+      "message": "Generic type \"dict\" used without type arguments, defaulting to \"dict[Any]\"; consider adding explicit type arguments"
+    },
+    {
+      "line": 159,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 159,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 164,
+      "col": 8,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 164,
+      "col": 8,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 165,
+      "col": 86,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 165,
+      "col": 86,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 165,
+      "col": 26,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 165,
+      "col": 26,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 168,
+      "col": 27,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 170,
+      "col": 30,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 174,
+      "col": 12,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 174,
+      "col": 12,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 177,
+      "col": 32,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 182,
+      "col": 9,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 182,
+      "col": 9,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 183,
+      "col": 26,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 183,
+      "col": 26,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 183,
+      "col": 13,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 183,
+      "col": 13,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 185,
+      "col": 13,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 185,
+      "col": 13,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 185,
+      "col": 27,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 185,
+      "col": 27,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 185,
+      "col": 41,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 185,
+      "col": 41,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 185,
+      "col": 27,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 187,
+      "col": 40,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 187,
+      "col": 40,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 187,
+      "col": 60,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 187,
+      "col": 60,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 187,
+      "col": 40,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 187,
+      "col": 39,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 187,
+      "col": 24,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 181,
+      "col": 9,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 191,
+      "col": 44,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 191,
+      "col": 41,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 191,
+      "col": 56,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 193,
+      "col": 24,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 193,
+      "col": 24,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 193,
+      "col": 12,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 193,
+      "col": 12,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 193,
+      "col": 12,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 192,
+      "col": 11,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 192,
+      "col": 11,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 192,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 201,
+      "col": 25,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 201,
+      "col": 22,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 202,
+      "col": 16,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 207,
+      "col": 9,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 158,
+      "col": 85,
+      "message": "Generic type \"dict\" used without type arguments, defaulting to \"dict[Any]\"; consider adding explicit type arguments"
+    },
+    {
+      "line": 215,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 215,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 220,
+      "col": 8,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 220,
+      "col": 8,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 221,
+      "col": 84,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 221,
+      "col": 84,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 221,
+      "col": 26,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 221,
+      "col": 26,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 229,
+      "col": 30,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 234,
+      "col": 49,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 234,
+      "col": 49,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 235,
+      "col": 21,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 235,
+      "col": 21,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 239,
+      "col": 60,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 239,
+      "col": 60,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 240,
+      "col": 16,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 240,
+      "col": 16,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 243,
+      "col": 34,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 243,
+      "col": 34,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 243,
+      "col": 21,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 243,
+      "col": 21,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 245,
+      "col": 17,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 245,
+      "col": 17,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 245,
+      "col": 35,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 245,
+      "col": 35,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 245,
+      "col": 53,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 245,
+      "col": 53,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 245,
+      "col": 35,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 247,
+      "col": 13,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 247,
+      "col": 13,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 247,
+      "col": 31,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 247,
+      "col": 31,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 247,
+      "col": 31,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 248,
+      "col": 13,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 249,
+      "col": 13,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 249,
+      "col": 33,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 249,
+      "col": 33,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 250,
+      "col": 13,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 251,
+      "col": 49,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 252,
+      "col": 30,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 252,
+      "col": 17,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 252,
+      "col": 17,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 253,
+      "col": 35,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 253,
+      "col": 20,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 254,
+      "col": 47,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 254,
+      "col": 47,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 255,
+      "col": 70,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 255,
+      "col": 34,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 258,
+      "col": 17,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 258,
+      "col": 17,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 258,
+      "col": 31,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 258,
+      "col": 31,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 258,
+      "col": 45,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 258,
+      "col": 31,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 260,
+      "col": 13,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 265,
+      "col": 25,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 265,
+      "col": 22,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 266,
+      "col": 34,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 266,
+      "col": 54,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 266,
+      "col": 34,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 266,
+      "col": 33,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 266,
+      "col": 21,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 269,
+      "col": 26,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 269,
+      "col": 23,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 270,
+      "col": 12,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 271,
+      "col": 13,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 214,
+      "col": 67,
+      "message": "Generic type \"dict\" used without type arguments, defaulting to \"dict[Any]\"; consider adding explicit type arguments"
+    },
+    {
+      "line": 280,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 280,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 285,
+      "col": 8,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 285,
+      "col": 8,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 286,
+      "col": 94,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 286,
+      "col": 94,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 286,
+      "col": 26,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 286,
+      "col": 26,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 288,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 288,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 289,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 289,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 290,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 290,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 291,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 291,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 292,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 292,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 293,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 293,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 294,
+      "col": 23,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 279,
+      "col": 143,
+      "message": "Generic type \"dict\" used without type arguments, defaulting to \"dict[Any]\"; consider adding explicit type arguments"
+    },
+    {
+      "line": 307,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 307,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 308,
+      "col": 19,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 308,
+      "col": 19,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 308,
+      "col": 35,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 308,
+      "col": 35,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 298,
+      "col": 64,
+      "message": "Generic type \"dict\" used without type arguments, defaulting to \"dict[Any]\"; consider adding explicit type arguments"
+    },
+    {
+      "line": 313,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 313,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 314,
+      "col": 27,
+      "message": "'root()' is deprecated. Use bare 'root' instead."
+    },
+    {
+      "line": 314,
+      "col": 41,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 314,
+      "col": 38,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 314,
+      "col": 51,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 320,
+      "col": 28,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 320,
+      "col": 25,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 321,
+      "col": 16,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 322,
+      "col": 43,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 322,
+      "col": 30,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 323,
+      "col": 20,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 324,
+      "col": 51,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 324,
+      "col": 34,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 312,
+      "col": 41,
+      "message": "Generic type \"dict\" used without type arguments, defaulting to \"dict[Any]\"; consider adding explicit type arguments"
+    },
+    {
+      "line": 340,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 340,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 341,
+      "col": 18,
+      "message": "'root()' is deprecated. Use bare 'root' instead."
+    },
+    {
+      "line": 341,
+      "col": 32,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 341,
+      "col": 29,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 342,
+      "col": 19,
+      "message": "'root()' is deprecated. Use bare 'root' instead."
+    },
+    {
+      "line": 342,
+      "col": 33,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 342,
+      "col": 30,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 347,
+      "col": 12,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 348,
+      "col": 31,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 350,
+      "col": 31,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 358,
+      "col": 12,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 359,
+      "col": 45,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 362,
+      "col": 27,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 362,
+      "col": 27,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 371,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 371,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 372,
+      "col": 19,
+      "message": "'root()' is deprecated. Use bare 'root' instead."
+    },
+    {
+      "line": 372,
+      "col": 33,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 372,
+      "col": 30,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 376,
+      "col": 28,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 376,
+      "col": 25,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 377,
+      "col": 16,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 378,
+      "col": 37,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 378,
+      "col": 27,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 379,
+      "col": 20,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 380,
+      "col": 37,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 380,
+      "col": 27,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 385,
+      "col": 12,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 390,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 390,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 391,
+      "col": 15,
+      "message": "'root()' is deprecated. Use bare 'root' instead."
+    },
+    {
+      "line": 391,
+      "col": 29,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 391,
+      "col": 26,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 397,
+      "col": 12,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 397,
+      "col": 52,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 397,
+      "col": 87,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 397,
+      "col": 67,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 398,
+      "col": 33,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 398,
+      "col": 13,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 398,
+      "col": 46,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 407,
+      "col": 43,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 407,
+      "col": 43,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 407,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 412,
+      "col": 13,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 412,
+      "col": 13,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 414,
+      "col": 27,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 414,
+      "col": 27,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 423,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 423,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 424,
+      "col": 15,
+      "message": "'root()' is deprecated. Use bare 'root' instead."
+    },
+    {
+      "line": 424,
+      "col": 29,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 424,
+      "col": 26,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 427,
+      "col": 12,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 436,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 436,
+      "col": 5,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 437,
+      "col": 19,
+      "message": "'root()' is deprecated. Use bare 'root' instead."
+    },
+    {
+      "line": 437,
+      "col": 33,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 437,
+      "col": 30,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 442,
+      "col": 12,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 443,
+      "col": 31,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 443,
+      "col": 13,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 445,
+      "col": 31,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 445,
+      "col": 13,
+      "message": "Expression type could not be resolved (Unknown)"
+    },
+    {
+      "line": 174,
+      "col": 12,
+      "message": "Redundant comparison to boolean literal \u2014 use the expression directly"
+    }
+  ]
+}
