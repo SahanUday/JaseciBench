@@ -1,0 +1,5 @@
+.jac/
+node_modules/
+*.jbc
+*.jir
+.DS_Store
