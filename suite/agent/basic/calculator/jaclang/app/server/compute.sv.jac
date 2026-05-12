@@ -42,6 +42,13 @@ walker:priv Compute {
                 return;
             }
             value = self.a / self.b;
+        } elif self.op == "%" {
+            if self.b == 0.0 {
+                self.error = "modulo by zero";
+                report {"error": self.error};
+                return;
+            }
+            value = self.a % self.b;
         } else {
             self.error = "unknown operator: " + self.op;
             report {"error": self.error};
@@ -89,5 +96,21 @@ walker:priv ClearHistory {
 
     can finish with Root exit {
         report {"deleted": self.deleted};
+    }
+}
+
+walker:priv SumHistory {
+    has total: float = 0.0;
+
+    can collect with Root entry {
+        visit [-->];
+    }
+
+    can accumulate with Calculation entry {
+        self.total += here.result;
+    }
+
+    can finish with Root exit {
+        report self.total;
     }
 }
