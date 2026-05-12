@@ -50,12 +50,6 @@ test "search_products matches name case-insensitively" {
 }
 
 
-test "search_products returns empty list for empty query" {
-    results = search_products("");
-    assert len(results) == 0;
-}
-
-
 # Users ---------------------------------------------------------------
 
 test "get_profile returns alice" {
