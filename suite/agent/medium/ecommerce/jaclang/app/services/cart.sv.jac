@@ -43,9 +43,11 @@ def:pub get_cart(user_id: str) -> dict {
             continue;
         }
         items.append(cart_item_dict(ci, v));
-        total = total + v.price;
+        total = total + (v.price * ci.quantity);
     }
-    return {"items": items, "total": total};
+    shipping = 5.99 if total > 0.0 else 0.0;
+    grand_total = round(total + shipping, 2);
+    return {"items": items, "total": total, "count": len(items), "shipping": shipping, "grand_total": grand_total};
 }
 
 
@@ -58,15 +60,27 @@ def:pub add_to_cart(user_id: str, variant_id: str, quantity: int = 1) -> dict {
     if v is None {
         return {"error": "Variant not found", "status": 404};
     }
-    if v.stock_qty < quantity {
+
+    # Find existing cart item to check cumulative quantity
+    existing_qty = 0;
+    existing_ci = None;
+    for ci in [root() -->][?:CartItem] {
+        if ci.user_id == user_id and ci.variant_id == variant_id {
+            existing_qty = ci.quantity;
+            existing_ci = ci;
+            break;
+        }
+    }
+
+    # Check cumulative stock ceiling
+    if existing_qty + quantity > v.stock_qty {
         return {"error": "Insufficient stock", "status": 400};
     }
 
-    for ci in [root() -->][?:CartItem] {
-        if ci.user_id == user_id and ci.variant_id == variant_id {
-            ci.quantity = ci.quantity + quantity;
-            return {"id": ci.id, "variant_id": ci.variant_id, "quantity": ci.quantity};
-        }
+    # Update existing or create new
+    if existing_ci is not None {
+        existing_ci.quantity = existing_ci.quantity + quantity;
+        return {"id": existing_ci.id, "variant_id": existing_ci.variant_id, "quantity": existing_ci.quantity};
     }
 
     next_id = "ci_" + str(len([root() -->][?:CartItem]) + 1).zfill(3);
@@ -179,6 +193,7 @@ def:pub checkout(
     for idx in range(len(resolved_variants)) {
         v = resolved_variants[idx];
         qty = resolved_qtys[idx];
+        v.stock_qty = v.stock_qty - qty;
         oi_id = "oi_" + order_id + "_" + str(idx + 1);
         order ++> OrderItem(
             id=oi_id,

@@ -230,6 +230,17 @@ def:pub modify_order_items(order_id: str, changes: list[dict]) -> dict {
         }
     }
 
+    new_total = 0.0;
+    for oi in [o -->][?:OrderItem] {
+        new_total = new_total + (oi.price_snapshot * oi.quantity);
+    }
+    new_total_rounded = int(new_total * 100) / 100.0;
+    for pay in [o -->][?:Payment] {
+        if pay.transaction_type == "payment" {
+            pay.amount = new_total_rounded;
+        }
+    }
+
     return order_dict(o);
 }
 

@@ -36,6 +36,10 @@ def:pub add_review(product_id: str, user_id: str, rating: int, title: str = "", 
         return {"error": "Product not found", "status": 404};
     }
 
+    if rating < 1 or rating > 5 {
+        return {"error": "Rating must be between 1 and 5", "status": 400};
+    }
+
     next_num = len([root() -->][?:Review]);
     for prod in [root() -->][?:Product] {
         next_num = next_num + len([prod -->][?:Review]);
