@@ -18,6 +18,16 @@ def find_order(order_id: str) -> Order | None {
 
 def order_dict(o: Order, include_items: bool = True) -> dict {
     if not include_items {
+        total_paid = 0.0;
+        for p in [o -->][?:Payment] {
+            if p.transaction_type == "payment" {
+                total_paid = total_paid + p.amount;
+            } elif p.transaction_type == "refund" {
+                total_paid = total_paid - p.amount;
+            }
+        }
+        total_paid = int(total_paid * 100) / 100.0;
+        
         return {
             "id": o.id,
             "user_id": o.user_id,
@@ -29,6 +39,8 @@ def order_dict(o: Order, include_items: bool = True) -> dict {
             "shipping_zip": o.shipping_zip,
             "shipping_country": o.shipping_country,
             "created_at": o.created_at,
+            "item_count": len([o -->][?:OrderItem]),
+            "total_paid": total_paid,
         };
     }
     items = [
@@ -106,6 +118,16 @@ def:pub cancel_order(order_id: str) -> dict {
     if o is None {
         return {"error": "Order not found", "status": 404};
     }
+    if o.status != "pending" {
+        return {"error": "Only pending orders can be cancelled (current status: " + o.status + ")", "status": 400};
+    }
+
+    for oi in [o -->][?:OrderItem] {
+        v = find_variant(oi.variant_id);
+        if v is not None {
+            v.stock_qty = v.stock_qty + oi.quantity;
+        }
+    }
 
     now_str = str(datetime.now());
     refund_seq = 0;
@@ -142,6 +164,9 @@ def:pub return_items(order_id: str, item_ids: list[str], payment_method_id: str)
         oi = find_order_item(o, oi_id);
         if oi is None {
             return {"error": "Order item " + oi_id + " not found in order", "status": 404};
+        }
+        if oi.returned == True {
+            return {"error": "Order item " + oi_id + " is already returned", "status": 400};
         }
         items_to_return.append(oi);
     }
@@ -227,6 +252,17 @@ def:pub modify_order_items(order_id: str, changes: list[dict]) -> dict {
                 v.stock_qty = v.stock_qty - diff;
             }
             oi.quantity = new_quantity;
+        }
+    }
+
+    new_total = 0.0;
+    for oi in [o -->][?:OrderItem] {
+        new_total = new_total + (oi.price_snapshot * oi.quantity);
+    }
+    new_total_rounded = int(new_total * 100) / 100.0;
+    for pay in [o -->][?:Payment] {
+        if pay.transaction_type == "payment" {
+            pay.amount = new_total_rounded;
         }
     }
 

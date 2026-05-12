@@ -98,6 +98,18 @@ impl app.press_clear -> None {
     last_error = "";
 }
 
+impl app.press_backspace -> None {
+    last_error = "";
+    if awaiting_operand {
+        return;
+    }
+    display = display[:-1];
+    if not display or display == "-" {
+        display = "0";
+        awaiting_operand = True;
+    }
+}
+
 impl app.refresh_history -> None {
     out = root spawn ListHistory();
     history = out.reports[0] if out.reports else [];
@@ -106,4 +118,9 @@ impl app.refresh_history -> None {
 impl app.clear_history -> None {
     root spawn ClearHistory();
     history = [];
+}
+
+impl app.show_history_sum -> None {
+    out = root spawn SumHistory();
+    display = str(out.total);
 }
