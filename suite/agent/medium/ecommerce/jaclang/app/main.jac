@@ -11,7 +11,7 @@ import from services.users {
     list_users, get_profile, list_addresses, list_payment_methods,
     add_address, update_address, delete_address,
 }
-import from services.reviews { list_reviews, add_review, product_review_summary }
+import from services.reviews { list_reviews, add_review, product_review_summary, list_user_reviews }
 import from services.cart { get_cart, add_to_cart, update_cart_item, remove_from_cart, clear_cart, checkout }
 import from services.orders {
     list_orders, get_order, cancel_order, update_order_status,

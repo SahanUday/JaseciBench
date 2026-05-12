@@ -37,7 +37,8 @@ def:pub Keypad(
     on_digit: any,
     on_op: any,
     on_equals: any,
-    on_clear: any
+    on_clear: any,
+    on_backspace: any
 ) -> JsxElement {
     digits = ["7", "8", "9", "4", "5", "6", "1", "2", "3", "0", "."];
     ops = ["/", "*", "-", "+"];
@@ -93,6 +94,22 @@ def:pub Keypad(
                 }}
             >
                 C
+            </button>
+            <button
+                data-testid="calc-key-backspace"
+                onClick={lambda _e: MouseEvent { on_backspace(); }}
+                style={{
+                    "padding": "1rem",
+                    "fontSize": "1.125rem",
+                    "fontWeight": "600",
+                    "background": "#ef4444",
+                    "color": "#ffffff",
+                    "border": "none",
+                    "borderRadius": "0.5rem",
+                    "cursor": "pointer"
+                }}
+            >
+                ⌫
             </button>
         </div>;
 }

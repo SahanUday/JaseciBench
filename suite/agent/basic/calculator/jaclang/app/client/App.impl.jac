@@ -107,3 +107,21 @@ impl app.clear_history -> None {
     root spawn ClearHistory();
     history = [];
 }
+
+impl app.press_backspace -> None {
+    last_error = "";
+    if awaiting_operand {
+        return;
+    }
+    display = display[:-1];
+    if not display or display == "-" {
+        display = "0";
+        awaiting_operand = True;
+    }
+}
+
+impl app.show_history_sum -> None {
+    out = root spawn SumHistory();
+    total = out.reports[0] if out.reports else 0.0;
+    display = str(total);
+}
