@@ -1,0 +1,308 @@
+  Checking pages/OrdersPage.cl.jac...
+pages/OrdersPage.cl.jac FAILED [100%]
+
+=================================== FAILURES ===================================
+___________________________ pages/OrdersPage.cl.jac ____________________________
+
+================================= failed files =================================
+pages/OrdersPage.cl.jac - 14 errors, 21 warnings
+============================== 1 failed in 1.57s ===============================
+STDERR:
+✖ Error: error[E1101]: Component 'Link' has no prop 'to'
+  --> pages/OrdersPage.cl.jac:59:19
+   57 |         {(<div className="text-center py-12">
+   58 |             <p className="text-gray-500 mb-4">No orders yet.</p>
+   59 |             <Link to="/" className="inline-block px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+      |                   ^^^^^^
+   60 |                 Browse products
+   61 |             </Link>
+✖ Error: error[E1101]: Component 'Link' has no prop 'className'
+  --> pages/OrdersPage.cl.jac:59:26
+   57 |         {(<div className="text-center py-12">
+   58 |             <p className="text-gray-500 mb-4">No orders yet.</p>
+   59 |             <Link to="/" className="inline-block px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+      |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   60 |                 Browse products
+   61 |             </Link>
+✖ Error: error[E1102]: Component 'Link' requires prop 'props'
+  --> pages/OrdersPage.cl.jac:59:13
+   57 |         {(<div className="text-center py-12">
+   58 |             <p className="text-gray-500 mb-4">No orders yet.</p>
+   59 |             <Link to="/" className="inline-block px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+      |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   60 |                 Browse products
+   61 |             </Link>
+✖ Error: error[E1101]: Component 'Link' has no prop 'to'
+  --> pages/OrdersPage.cl.jac:59:19
+   57 |         {(<div className="text-center py-12">
+   58 |             <p className="text-gray-500 mb-4">No orders yet.</p>
+   59 |             <Link to="/" className="inline-block px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+      |                   ^^^^^^
+   60 |                 Browse products
+   61 |             </Link>
+✖ Error: error[E1101]: Component 'Link' has no prop 'className'
+  --> pages/OrdersPage.cl.jac:59:26
+   57 |         {(<div className="text-center py-12">
+   58 |             <p className="text-gray-500 mb-4">No orders yet.</p>
+   59 |             <Link to="/" className="inline-block px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+      |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   60 |                 Browse products
+   61 |             </Link>
+✖ Error: error[E1102]: Component 'Link' requires prop 'props'
+  --> pages/OrdersPage.cl.jac:59:13
+   57 |         {(<div className="text-center py-12">
+   58 |             <p className="text-gray-500 mb-4">No orders yet.</p>
+   59 |             <Link to="/" className="inline-block px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+      |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   60 |                 Browse products
+   61 |             </Link>
+✖ Error: error[E1055]: No matching overload found for method "__add__" with the given arguments
+  --> pages/OrdersPage.cl.jac:71:30
+   69 |                         <div className="text-xs text-gray-500 mt-0.5">{o["created_at"]}</div>
+   70 |                         <div className="text-xs text-gray-600 mt-2">
+   71 |                             {o["shipping_address1"] + ", " + o["shipping_city"] + ", " + o["shipping_state"] + " " + o["shipping_zip"]}
+      |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   72 |                         </div>
+   73 |                         <div className="text-xs text-gray-500 mt-1">
+✖ Error: error[E1055]: No matching overload found for method "__add__" with the given arguments
+  --> pages/OrdersPage.cl.jac:71:30
+   69 |                         <div className="text-xs text-gray-500 mt-0.5">{o["created_at"]}</div>
+   70 |                         <div className="text-xs text-gray-600 mt-2">
+   71 |                             {o["shipping_address1"] + ", " + o["shipping_city"] + ", " + o["shipping_state"] + " " + o["shipping_zip"]}
+      |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   72 |                         </div>
+   73 |                         <div className="text-xs text-gray-500 mt-1">
+✖ Error: error[E1055]: No matching overload found for method "__add__" with the given arguments
+  --> pages/OrdersPage.cl.jac:71:30
+   69 |                         <div className="text-xs text-gray-500 mt-0.5">{o["created_at"]}</div>
+   70 |                         <div className="text-xs text-gray-600 mt-2">
+   71 |                             {o["shipping_address1"] + ", " + o["shipping_city"] + ", " + o["shipping_state"] + " " + o["shipping_zip"]}
+      |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   72 |                         </div>
+   73 |                         <div className="text-xs text-gray-500 mt-1">
+✖ Error: error[E1055]: No matching overload found for method "__add__" with the given arguments
+  --> pages/OrdersPage.cl.jac:71:30
+   69 |                         <div className="text-xs text-gray-500 mt-0.5">{o["created_at"]}</div>
+   70 |                         <div className="text-xs text-gray-600 mt-2">
+   71 |                             {o["shipping_address1"] + ", " + o["shipping_city"] + ", " + o["shipping_state"] + " " + o["shipping_zip"]}
+      |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   72 |                         </div>
+   73 |                         <div className="text-xs text-gray-500 mt-1">
+✖ Error: error[E1055]: No matching overload found for method "__add__" with the given arguments
+  --> pages/OrdersPage.cl.jac:71:30
+   69 |                         <div className="text-xs text-gray-500 mt-0.5">{o["created_at"]}</div>
+   70 |                         <div className="text-xs text-gray-600 mt-2">
+   71 |                             {o["shipping_address1"] + ", " + o["shipping_city"] + ", " + o["shipping_state"] + " " + o["shipping_zip"]}
+      |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   72 |                         </div>
+   73 |                         <div className="text-xs text-gray-500 mt-1">
+✖ Error: error[E1055]: No matching overload found for method "__add__" with the given arguments
+  --> pages/OrdersPage.cl.jac:71:30
+   69 |                         <div className="text-xs text-gray-500 mt-0.5">{o["created_at"]}</div>
+   70 |                         <div className="text-xs text-gray-600 mt-2">
+   71 |                             {o["shipping_address1"] + ", " + o["shipping_city"] + ", " + o["shipping_state"] + " " + o["shipping_zip"]}
+      |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   72 |                         </div>
+   73 |                         <div className="text-xs text-gray-500 mt-1">
+✖ Error: error[E1053]: Cannot assign <Unknown> to parameter 'status' of type str
+  --> pages/OrdersPage.cl.jac:78:93
+   76 |                     </div>
+   77 |                     <div className="flex flex-col items-end gap-2">
+   78 |                         <span className={"text-xs rounded-full px-2.5 py-1 " + status_color(o["status"])}>
+      |                                                                                             ^^^^^^^^^^^
+   79 |                             {o["status"]}
+   80 |                         </span>
+✖ Error: error[E1053]: Cannot assign <Unknown> to parameter 'order_id' of type str
+  --> pages/OrdersPage.cl.jac:82:72
+   80 |                         </span>
+   81 |                         {(<button
+   82 |                             onClick={lambda _e: MouseEvent { do_cancel(o["id"]); }}
+      |                                                                        ^^^^^^^
+   83 |                             className="text-xs text-red-600 hover:text-red-700 hover:underline"
+   84 |                         >Cancel</button>) if o["status"] in ["pending", "processed"] else None}
+⚠ warning[W1036]: Generic type "list" used without type arguments, defaulting to "list[Any]"; consider adding explicit type arguments
+  --> pages/OrdersPage.cl.jac:32:17
+   30 | 
+   31 | def:pub OrdersPage() -> JsxElement {
+   32 |     has orders: list = [];
+      |                 ^^^^
+   33 |     has loading: bool = True;
+   34 | 
+⚠ warning[W1051]: Expression type could not be resolved (Unknown)
+  --> pages/OrdersPage.cl.jac:65:25
+   63 | 
+   64 |         <div className="space-y-3">
+   65 |             {[<div key={o["id"]} className="p-4 bg-white border border-gray-200 rounded-xl">
+      |                         ^^^^^^^
+   66 |                 <div className="flex items-start justify-between gap-4">
+   67 |                     <div className="min-w-0">
+help: Often fixed by adding a more specific type annotation to the relevant declaration (e.g., 'list[Task]' instead of bare 'list', or annotating an unannotated parameter or attribute). Can also indicate an unresolved import, a forward reference the checker cannot bind, or fallout from an upstream error.
+⚠ warning[W1051]: Expression type could not be resolved (Unknown)
+  --> pages/OrdersPage.cl.jac:68:75
+   66 |                 <div className="flex items-start justify-between gap-4">
+   67 |                     <div className="min-w-0">
+   68 |                         <div className="text-sm font-bold text-gray-900">{o["id"]}</div>
+      |                                                                           ^^^^^^^
+   69 |                         <div className="text-xs text-gray-500 mt-0.5">{o["created_at"]}</div>
+   70 |                         <div className="text-xs text-gray-600 mt-2">
+help: Often fixed by adding a more specific type annotation to the relevant declaration (e.g., 'list[Task]' instead of bare 'list', or annotating an unannotated parameter or attribute). Can also indicate an unresolved import, a forward reference the checker cannot bind, or fallout from an upstream error.
+⚠ warning[W1051]: Expression type could not be resolved (Unknown)
+  --> pages/OrdersPage.cl.jac:69:72
+   67 |                     <div className="min-w-0">
+   68 |                         <div className="text-sm font-bold text-gray-900">{o["id"]}</div>
+   69 |                         <div className="text-xs text-gray-500 mt-0.5">{o["created_at"]}</div>
+      |                                                                        ^^^^^^^^^^^^^^^
+   70 |                         <div className="text-xs text-gray-600 mt-2">
+   71 |                             {o["shipping_address1"] + ", " + o["shipping_city"] + ", " + o["shipping_state"] + " " + o["shipping_zip"]}
+help: Often fixed by adding a more specific type annotation to the relevant declaration (e.g., 'list[Task]' instead of bare 'list', or annotating an unannotated parameter or attribute). Can also indicate an unresolved import, a forward reference the checker cannot bind, or fallout from an upstream error.
+⚠ warning[W1051]: Expression type could not be resolved (Unknown)
+  --> pages/OrdersPage.cl.jac:71:30
+   69 |                         <div className="text-xs text-gray-500 mt-0.5">{o["created_at"]}</div>
+   70 |                         <div className="text-xs text-gray-600 mt-2">
+   71 |                             {o["shipping_address1"] + ", " + o["shipping_city"] + ", " + o["shipping_state"] + " " + o["shipping_zip"]}
+      |                              ^^^^^^^^^^^^^^^^^^^^^^
+   72 |                         </div>
+   73 |                         <div className="text-xs text-gray-500 mt-1">
+help: Often fixed by adding a more specific type annotation to the relevant declaration (e.g., 'list[Task]' instead of bare 'list', or annotating an unannotated parameter or attribute). Can also indicate an unresolved import, a forward reference the checker cannot bind, or fallout from an upstream error.
+⚠ warning[W1051]: Expression type could not be resolved (Unknown)
+  --> pages/OrdersPage.cl.jac:71:30
+   69 |                         <div className="text-xs text-gray-500 mt-0.5">{o["created_at"]}</div>
+   70 |                         <div className="text-xs text-gray-600 mt-2">
+   71 |                             {o["shipping_address1"] + ", " + o["shipping_city"] + ", " + o["shipping_state"] + " " + o["shipping_zip"]}
+      |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   72 |                         </div>
+   73 |                         <div className="text-xs text-gray-500 mt-1">
+help: Often fixed by adding a more specific type annotation to the relevant declaration (e.g., 'list[Task]' instead of bare 'list', or annotating an unannotated parameter or attribute). Can also indicate an unresolved import, a forward reference the checker cannot bind, or fallout from an upstream error.
+⚠ warning[W1051]: Expression type could not be resolved (Unknown)
+  --> pages/OrdersPage.cl.jac:71:62
+   69 |                         <div className="text-xs text-gray-500 mt-0.5">{o["created_at"]}</div>
+   70 |                         <div className="text-xs text-gray-600 mt-2">
+   71 |                             {o["shipping_address1"] + ", " + o["shipping_city"] + ", " + o["shipping_state"] + " " + o["shipping_zip"]}
+      |                                                              ^^^^^^^^^^^^^^^^^^
+   72 |                         </div>
+   73 |                         <div className="text-xs text-gray-500 mt-1">
+help: Often fixed by adding a more specific type annotation to the relevant declaration (e.g., 'list[Task]' instead of bare 'list', or annotating an unannotated parameter or attribute). Can also indicate an unresolved import, a forward reference the checker cannot bind, or fallout from an upstream error.
+⚠ warning[W1051]: Expression type could not be resolved (Unknown)
+  --> pages/OrdersPage.cl.jac:71:30
+   69 |                         <div className="text-xs text-gray-500 mt-0.5">{o["created_at"]}</div>
+   70 |                         <div className="text-xs text-gray-600 mt-2">
+   71 |                             {o["shipping_address1"] + ", " + o["shipping_city"] + ", " + o["shipping_state"] + " " + o["shipping_zip"]}
+      |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   72 |                         </div>
+   73 |                         <div className="text-xs text-gray-500 mt-1">
+help: Often fixed by adding a more specific type annotation to the relevant declaration (e.g., 'list[Task]' instead of bare 'list', or annotating an unannotated parameter or attribute). Can also indicate an unresolved import, a forward reference the checker cannot bind, or fallout from an upstream error.
+⚠ warning[W1051]: Expression type could not be resolved (Unknown)
+  --> pages/OrdersPage.cl.jac:71:30
+   69 |                         <div className="text-xs text-gray-500 mt-0.5">{o["created_at"]}</div>
+   70 |                         <div className="text-xs text-gray-600 mt-2">
+   71 |                             {o["shipping_address1"] + ", " + o["shipping_city"] + ", " + o["shipping_state"] + " " + o["shipping_zip"]}
+      |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   72 |                         </div>
+   73 |                         <div className="text-xs text-gray-500 mt-1">
+help: Often fixed by adding a more specific type annotation to the relevant declaration (e.g., 'list[Task]' instead of bare 'list', or annotating an unannotated parameter or attribute). Can also indicate an unresolved import, a forward reference the checker cannot bind, or fallout from an upstream error.
+⚠ warning[W1051]: Expression type could not be resolved (Unknown)
+  --> pages/OrdersPage.cl.jac:71:90
+   69 |                         <div className="text-xs text-gray-500 mt-0.5">{o["created_at"]}</div>
+   70 |                         <div className="text-xs text-gray-600 mt-2">
+   71 |                             {o["shipping_address1"] + ", " + o["shipping_city"] + ", " + o["shipping_state"] + " " + o["shipping_zip"]}
+      |                                                                                          ^^^^^^^^^^^^^^^^^^^
+   72 |                         </div>
+   73 |                         <div className="text-xs text-gray-500 mt-1">
+help: Often fixed by adding a more specific type annotation to the relevant declaration (e.g., 'list[Task]' instead of bare 'list', or annotating an unannotated parameter or attribute). Can also indicate an unresolved import, a forward reference the checker cannot bind, or fallout from an upstream error.
+⚠ warning[W1051]: Expression type could not be resolved (Unknown)
+  --> pages/OrdersPage.cl.jac:71:30
+   69 |                         <div className="text-xs text-gray-500 mt-0.5">{o["created_at"]}</div>
+   70 |                         <div className="text-xs text-gray-600 mt-2">
+   71 |                             {o["shipping_address1"] + ", " + o["shipping_city"] + ", " + o["shipping_state"] + " " + o["shipping_zip"]}
+      |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   72 |                         </div>
+   73 |                         <div className="text-xs text-gray-500 mt-1">
+help: Often fixed by adding a more specific type annotation to the relevant declaration (e.g., 'list[Task]' instead of bare 'list', or annotating an unannotated parameter or attribute). Can also indicate an unresolved import, a forward reference the checker cannot bind, or fallout from an upstream error.
+⚠ warning[W1051]: Expression type could not be resolved (Unknown)
+  --> pages/OrdersPage.cl.jac:71:30
+   69 |                         <div className="text-xs text-gray-500 mt-0.5">{o["created_at"]}</div>
+   70 |                         <div className="text-xs text-gray-600 mt-2">
+   71 |                             {o["shipping_address1"] + ", " + o["shipping_city"] + ", " + o["shipping_state"] + " " + o["shipping_zip"]}
+      |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   72 |                         </div>
+   73 |                         <div className="text-xs text-gray-500 mt-1">
+help: Often fixed by adding a more specific type annotation to the relevant declaration (e.g., 'list[Task]' instead of bare 'list', or annotating an unannotated parameter or attribute). Can also indicate an unresolved import, a forward reference the checker cannot bind, or fallout from an upstream error.
+⚠ warning[W1051]: Expression type could not be resolved (Unknown)
+  --> pages/OrdersPage.cl.jac:71:118
+   69 |                         <div className="text-xs text-gray-500 mt-0.5">{o["created_at"]}</div>
+   70 |                         <div className="text-xs text-gray-600 mt-2">
+   71 |                             {o["shipping_address1"] + ", " + o["shipping_city"] + ", " + o["shipping_state"] + " " + o["shipping_zip"]}
+      |                                                                                                                      ^^^^^^^^^^^^^^^^^
+   72 |                         </div>
+   73 |                         <div className="text-xs text-gray-500 mt-1">
+help: Often fixed by adding a more specific type annotation to the relevant declaration (e.g., 'list[Task]' instead of bare 'list', or annotating an unannotated parameter or attribute). Can also indicate an unresolved import, a forward reference the checker cannot bind, or fallout from an upstream error.
+⚠ warning[W1051]: Expression type could not be resolved (Unknown)
+  --> pages/OrdersPage.cl.jac:71:30
+   69 |                         <div className="text-xs text-gray-500 mt-0.5">{o["created_at"]}</div>
+   70 |                         <div className="text-xs text-gray-600 mt-2">
+   71 |                             {o["shipping_address1"] + ", " + o["shipping_city"] + ", " + o["shipping_state"] + " " + o["shipping_zip"]}
+      |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   72 |                         </div>
+   73 |                         <div className="text-xs text-gray-500 mt-1">
+help: Often fixed by adding a more specific type annotation to the relevant declaration (e.g., 'list[Task]' instead of bare 'list', or annotating an unannotated parameter or attribute). Can also indicate an unresolved import, a forward reference the checker cannot bind, or fallout from an upstream error.
+⚠ warning[W1051]: Expression type could not be resolved (Unknown)
+  --> pages/OrdersPage.cl.jac:74:34
+   72 |                         </div>
+   73 |                         <div className="text-xs text-gray-500 mt-1">
+   74 |                             {str(o["item_count"]) + " items"}
+      |                                  ^^^^^^^^^^^^^^^
+   75 |                         </div>
+   76 |                     </div>
+help: Often fixed by adding a more specific type annotation to the relevant declaration (e.g., 'list[Task]' instead of bare 'list', or annotating an unannotated parameter or attribute). Can also indicate an unresolved import, a forward reference the checker cannot bind, or fallout from an upstream error.
+⚠ warning[W1051]: Expression type could not be resolved (Unknown)
+  --> pages/OrdersPage.cl.jac:78:93
+   76 |                     </div>
+   77 |                     <div className="flex flex-col items-end gap-2">
+   78 |                         <span className={"text-xs rounded-full px-2.5 py-1 " + status_color(o["status"])}>
+      |                                                                                             ^^^^^^^^^^^
+   79 |                             {o["status"]}
+   80 |                         </span>
+help: Often fixed by adding a more specific type annotation to the relevant declaration (e.g., 'list[Task]' instead of bare 'list', or annotating an unannotated parameter or attribute). Can also indicate an unresolved import, a forward reference the checker cannot bind, or fallout from an upstream error.
+⚠ warning[W1051]: Expression type could not be resolved (Unknown)
+  --> pages/OrdersPage.cl.jac:79:30
+   77 |                     <div className="flex flex-col items-end gap-2">
+   78 |                         <span className={"text-xs rounded-full px-2.5 py-1 " + status_color(o["status"])}>
+   79 |                             {o["status"]}
+      |                              ^^^^^^^^^^^
+   80 |                         </span>
+   81 |                         {(<button
+help: Often fixed by adding a more specific type annotation to the relevant declaration (e.g., 'list[Task]' instead of bare 'list', or annotating an unannotated parameter or attribute). Can also indicate an unresolved import, a forward reference the checker cannot bind, or fallout from an upstream error.
+⚠ warning[W1051]: Expression type could not be resolved (Unknown)
+  --> pages/OrdersPage.cl.jac:82:72
+   80 |                         </span>
+   81 |                         {(<button
+   82 |                             onClick={lambda _e: MouseEvent { do_cancel(o["id"]); }}
+      |                                                                        ^^^^^^^
+   83 |                             className="text-xs text-red-600 hover:text-red-700 hover:underline"
+   84 |                         >Cancel</button>) if o["status"] in ["pending", "processed"] else None}
+help: Often fixed by adding a more specific type annotation to the relevant declaration (e.g., 'list[Task]' instead of bare 'list', or annotating an unannotated parameter or attribute). Can also indicate an unresolved import, a forward reference the checker cannot bind, or fallout from an upstream error.
+⚠ warning[W1051]: Expression type could not be resolved (Unknown)
+  --> pages/OrdersPage.cl.jac:84:46
+   82 |                             onClick={lambda _e: MouseEvent { do_cancel(o["id"]); }}
+   83 |                             className="text-xs text-red-600 hover:text-red-700 hover:underline"
+   84 |                         >Cancel</button>) if o["status"] in ["pending", "processed"] else None}
+      |                                              ^^^^^^^^^^^
+   85 |                     </div>
+   86 |                 </div>
+help: Often fixed by adding a more specific type annotation to the relevant declaration (e.g., 'list[Task]' instead of bare 'list', or annotating an unannotated parameter or attribute). Can also indicate an unresolved import, a forward reference the checker cannot bind, or fallout from an upstream error.
+⚠ warning[W3037]: Unnecessary '-> None' return type annotation on 'refresh'; functions without a return statement implicitly return None [unnecessary-none-return]
+  --> pages/OrdersPage.cl.jac:35:28
+   33 |     has loading: bool = True;
+   34 | 
+   35 |     async def refresh() -> None {
+      |                            ^^^^
+   36 |         result = await list_orders("user_001");
+   37 |         orders = result if result else [];
+⚠ warning[W3037]: Unnecessary '-> None' return type annotation on 'do_cancel'; functions without a return statement implicitly return None [unnecessary-none-return]
+  --> pages/OrdersPage.cl.jac:45:43
+   43 |     }
+   44 | 
+   45 |     async def do_cancel(order_id: str) -> None {
+      |                                           ^^^^
+   46 |         await cancel_order(order_id);
+   47 |         await refresh();

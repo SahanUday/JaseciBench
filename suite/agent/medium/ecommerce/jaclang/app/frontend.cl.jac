@@ -6,6 +6,7 @@ import from .pages.CatalogPage { CatalogPage }
 import from .pages.ProductPage { ProductPage }
 import from .pages.CartPage { CartPage }
 import from .pages.OrdersPage { OrdersPage }
+import from .pages.OrderDetailPage { OrderDetailPage }
 import from .pages.SearchPage { SearchPage }
 
 
@@ -18,6 +19,7 @@ def:pub Shell() -> JsxElement {
                 <Route path="/products/:id" element={<ProductPage />} />
                 <Route path="/cart" element={<CartPage />} />
                 <Route path="/orders" element={<OrdersPage />} />
+                <Route path="/orders/:id" element={<OrderDetailPage />} />
                 <Route path="/search" element={<SearchPage />} />
                 <Route path="*" element={<Navigate to="/" replace={True} />} />
             </Routes>

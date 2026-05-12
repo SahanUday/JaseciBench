@@ -43,9 +43,22 @@ def:pub get_cart(user_id: str) -> dict {
             continue;
         }
         items.append(cart_item_dict(ci, v));
-        total = total + v.price;
+        total = total + (v.price * ci.quantity);
     }
-    return {"items": items, "total": total};
+    shipping = 5.99 if total > 0.0 else 0.0;
+    grand_total = int((total + shipping) * 100) / 100.0;
+    return {"items": items, "total": total, "count": len(items), "shipping": shipping, "grand_total": grand_total};
+}
+
+
+def:pub cart_total_quantity(user_id: str) -> int {
+    total_qty = 0;
+    for ci in [root() -->][?:CartItem] {
+        if ci.user_id == user_id {
+            total_qty = total_qty + ci.quantity;
+        }
+    }
+    return total_qty;
 }
 
 
@@ -58,7 +71,18 @@ def:pub add_to_cart(user_id: str, variant_id: str, quantity: int = 1) -> dict {
     if v is None {
         return {"error": "Variant not found", "status": 404};
     }
-    if v.stock_qty < quantity {
+    
+    # Check existing cart quantity
+    existing_qty = 0;
+    for ci in [root() -->][?:CartItem] {
+        if ci.user_id == user_id and ci.variant_id == variant_id {
+            existing_qty = ci.quantity;
+            break;
+        }
+    }
+    
+    # Enforce stock ceiling against cumulative quantity
+    if existing_qty + quantity > v.stock_qty {
         return {"error": "Insufficient stock", "status": 400};
     }
 
@@ -101,6 +125,20 @@ def:pub remove_from_cart(cart_item_id: str) -> dict {
     }
     del ci;
     return {"deleted": cart_item_id};
+}
+
+
+def:pub cart_replace_variant(cart_item_id: str, new_variant_id: str) -> dict {
+    ci = find_cart_item(cart_item_id);
+    if ci is None {
+        return {"error": "Cart item not found", "status": 404};
+    }
+    v = find_variant(new_variant_id);
+    if v is None {
+        return {"error": "Variant not found", "status": 404};
+    }
+    ci.variant_id = new_variant_id;
+    return cart_item_dict(ci, v);
 }
 
 
@@ -179,6 +217,7 @@ def:pub checkout(
     for idx in range(len(resolved_variants)) {
         v = resolved_variants[idx];
         qty = resolved_qtys[idx];
+        v.stock_qty = v.stock_qty - qty;
         oi_id = "oi_" + order_id + "_" + str(idx + 1);
         order ++> OrderItem(
             id=oi_id,

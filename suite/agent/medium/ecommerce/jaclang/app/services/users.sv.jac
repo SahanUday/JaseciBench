@@ -84,6 +84,23 @@ def:pub get_profile(user_id: str) -> dict | None {
 }
 
 
+def:pub update_username(user_id: str, new_username: str) -> dict {
+    ensure_seeded();
+    u = find_user(user_id);
+    if u is None {
+        return {"error": "User not found", "status": 404};
+    }
+    # Check if new_username is already taken by a different user (case-sensitive)
+    for other in [root() -->][?:UserProfile] {
+        if other.username == new_username and other.id != user_id {
+            return {"error": "Username already taken", "status": 400};
+        }
+    }
+    u.username = new_username;
+    return user_dict(u);
+}
+
+
 def:pub list_addresses(user_id: str) -> list[dict] {
     ensure_seeded();
     u = find_user(user_id);
@@ -91,6 +108,21 @@ def:pub list_addresses(user_id: str) -> list[dict] {
         return [];
     }
     return [address_dict(a) for a in [u -->][?:Address]];
+}
+
+
+def:pub get_default_address(user_id: str) -> dict | None {
+    ensure_seeded();
+    u = find_user(user_id);
+    if u is None {
+        return None;
+    }
+    for a in [u -->][?:Address] {
+        if a.is_default {
+            return address_dict(a);
+        }
+    }
+    return None;
 }
 
 
@@ -162,4 +194,64 @@ def:pub list_payment_methods(user_id: str) -> list[dict] {
         }
         for pm in [u -->][?:PaymentMethod]
     ];
+}
+
+
+def:pub add_payment_method(user_id: str, card_brand: str, last_four: str) -> dict {
+    ensure_seeded();
+    u = find_user(user_id);
+    if u is None {
+        return {"error": "User not found", "status": 404};
+    }
+    existing = [pm for pm in [u -->][?:PaymentMethod]];
+    pm_count = len(existing);
+    pm_id = "pm_" + str(pm_count + 1);
+    new_pm = PaymentMethod(
+        id=pm_id,
+        user_id=user_id,
+        card_brand=card_brand,
+        last_four=last_four,
+        is_default=False,
+    );
+    u ++> new_pm;
+    return {
+        "id": new_pm.id,
+        "user_id": new_pm.user_id,
+        "card_brand": new_pm.card_brand,
+        "last_four": new_pm.last_four,
+        "is_default": new_pm.is_default,
+    };
+}
+
+
+def:pub set_default_payment_method(user_id: str, payment_method_id: str) -> dict {
+    ensure_seeded();
+    u = find_user(user_id);
+    if u is None {
+        return {"error": "User not found", "status": 404};
+    }
+    target_pm = find_payment_method(user_id, payment_method_id);
+    if target_pm is None {
+        return {"error": "Payment method not found", "status": 404};
+    }
+    for pm in [u -->][?:PaymentMethod] {
+        if pm.id == payment_method_id {
+            pm.is_default = True;
+        } else {
+            pm.is_default = False;
+        }
+    }
+    return {
+        "id": target_pm.id,
+        "user_id": target_pm.user_id,
+        "card_brand": target_pm.card_brand,
+        "last_four": target_pm.last_four,
+        "is_default": target_pm.is_default,
+    };
+}
+
+
+def:pub user_count() -> int {
+    ensure_seeded();
+    return len([root() -->][?:UserProfile]);
 }
