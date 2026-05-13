@@ -70,3 +70,31 @@ def:pub product_review_summary(product_id: str) -> dict {
     avg = sum([r.rating for r in reviews]) / len(reviews);
     return {"count": len(reviews), "average_rating": int(avg * 100) / 100.0};
 }
+
+
+def:pub list_user_reviews(user_id: str) -> dict {
+    ensure_seeded();
+    user_reviews = [];
+    for prod in [root() -->][?:Product] {
+        for r in [prod -->][?:Review] {
+            if r.user_id == user_id {
+                user_reviews.append(review_dict(r));
+            }
+        }
+    }
+    return {"reviews": user_reviews, "count": len(user_reviews)};
+}
+
+
+def:pub recent_reviews(limit: int) -> dict {
+    ensure_seeded();
+    all_reviews = [];
+    for prod in [root() -->][?:Product] {
+        for r in [prod -->][?:Review] {
+            all_reviews.append(review_dict(r));
+        }
+    }
+    all_reviews.sort(key=lambda x: x["created_at"], reverse=True);
+    recent = all_reviews[:limit];
+    return {"reviews": recent, "count": len(recent)};
+}

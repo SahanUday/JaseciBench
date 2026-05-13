@@ -91,3 +91,19 @@ walker:priv ClearHistory {
         report {"deleted": self.deleted};
     }
 }
+
+walker:priv SumHistory {
+    has total: float = 0.0;
+
+    can collect with Root entry {
+        visit [-->];
+    }
+
+    can accumulate with Calculation entry {
+        self.total += here.result;
+    }
+
+    can finish with Root exit {
+        report self.total;
+    }
+}
