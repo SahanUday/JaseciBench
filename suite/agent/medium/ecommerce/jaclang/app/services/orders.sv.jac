@@ -265,3 +265,36 @@ def:pub update_order_status(order_id: str, new_status: str) -> dict {
     o.status = new_status;
     return {"id": o.id, "status": o.status};
 }
+
+
+def:pub user_with_most_orders() -> str {
+    ensure_seeded();
+    
+    # Get all orders
+    all_orders = [root() -->][?:Order];
+    
+    # Count orders per user
+    user_order_counts: dict = {};
+    for o in all_orders {
+        if o.user_id not in user_order_counts {
+            user_order_counts[o.user_id] = 0;
+        }
+        user_order_counts[o.user_id] = user_order_counts[o.user_id] + 1;
+    }
+    
+    # Find user with most orders
+    if len(user_order_counts) == 0 {
+        return "";
+    }
+    
+    max_user = "";
+    max_count = 0;
+    for (user_id, count) in user_order_counts.items() {
+        if count > max_count {
+            max_count = count;
+            max_user = user_id;
+        }
+    }
+    
+    return max_user;
+}
