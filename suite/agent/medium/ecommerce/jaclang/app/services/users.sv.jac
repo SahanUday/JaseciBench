@@ -68,6 +68,17 @@ def address_dict(a: Address) -> dict {
 }
 
 
+def payment_method_dict(pm: PaymentMethod) -> dict {
+    return {
+        "id": pm.id,
+        "user_id": pm.user_id,
+        "card_brand": pm.card_brand,
+        "last_four": pm.last_four,
+        "is_default": pm.is_default,
+    };
+}
+
+
 def:pub list_users() -> list[dict] {
     ensure_seeded();
     return [user_dict(u) for u in [root() -->][?:UserProfile]];
@@ -94,7 +105,32 @@ def:pub list_addresses(user_id: str) -> list[dict] {
 }
 
 
-def:pub add_address(user_id: str, address1: str, city: str, state: str, zip_code: str, address2: str = "", country: str = "USA") -> dict {
+def:pub get_default_address(user_id: str) -> dict | None {
+    ensure_seeded();
+    u = find_user(user_id);
+    if u is None {
+        return None;
+    }
+
+    for a in [u -->][?:Address] {
+        if a.is_default {
+            return address_dict(a);
+        }
+    }
+
+    return None;
+}
+
+
+def:pub add_address(
+    user_id: str,
+    address1: str,
+    city: str,
+    state: str,
+    zip_code: str,
+    address2: str = "",
+    country: str = "USA",
+) -> dict {
     ensure_seeded();
     u = find_user(user_id);
     if u is None {
@@ -119,7 +155,16 @@ def:pub add_address(user_id: str, address1: str, city: str, state: str, zip_code
 }
 
 
-def:pub update_address(user_id: str, address_id: str, address1: str, city: str, state: str, zip_code: str, address2: str = "", country: str = "USA") -> dict {
+def:pub update_address(
+    user_id: str,
+    address_id: str,
+    address1: str,
+    city: str,
+    state: str,
+    zip_code: str,
+    address2: str = "",
+    country: str = "USA",
+) -> dict {
     ensure_seeded();
     a = find_address(user_id, address_id);
     if a is None {
@@ -152,14 +197,86 @@ def:pub list_payment_methods(user_id: str) -> list[dict] {
     if u is None {
         return [];
     }
-    return [
-        {
-            "id": pm.id,
-            "user_id": pm.user_id,
-            "card_brand": pm.card_brand,
-            "last_four": pm.last_four,
-            "is_default": pm.is_default,
+    return [payment_method_dict(pm) for pm in [u -->][?:PaymentMethod]];
+}
+
+
+def:pub add_payment_method(user_id: str, card_brand: str, last_four: str) -> dict {
+    ensure_seeded();
+    u = find_user(user_id);
+    if u is None {
+        return {"error": "User not found", "status": 404};
+    }
+
+    existing = [pm for pm in [u -->][?:PaymentMethod]];
+    pmid = "pm_" + str(len(existing) + 1);
+
+    new_pm = PaymentMethod(
+        id=pmid,
+        user_id=user_id,
+        card_brand=card_brand,
+        last_four=last_four,
+        is_default=False,
+    );
+    u ++> new_pm;
+
+    return payment_method_dict(new_pm);
+}
+
+
+def:pub set_default_payment_method(user_id: str, payment_method_id: str) -> dict {
+    ensure_seeded();
+
+    u = find_user(user_id);
+    if u is None {
+        return {"error": "User not found", "status": 404};
+    }
+
+    pms = [pm for pm in [u -->][?:PaymentMethod]];
+    found = False;
+    for pm in pms {
+        if pm.id == payment_method_id {
+            found = True;
         }
-        for pm in [u -->][?:PaymentMethod]
-    ];
+    }
+
+    if not found {
+        return {"error": "Payment method not found", "status": 404};
+    }
+
+    for pm in pms {
+        pm.is_default = (pm.id == payment_method_id);
+    }
+
+    updated = find_payment_method(user_id, payment_method_id);
+    if updated is None {
+        return {"error": "Payment method not found", "status": 404};
+    }
+
+    return payment_method_dict(updated);
+}
+
+
+def:pub update_username(user_id: str, new_username: str) -> dict {
+    ensure_seeded();
+
+    u = find_user(user_id);
+    if u is None {
+        return {"error": "User not found", "status": 404};
+    }
+
+    # No-op success if unchanged
+    if u.username == new_username {
+        return user_dict(u);
+    }
+
+    # Case-sensitive uniqueness check against other users
+    for other in [root() -->][?:UserProfile] {
+        if other.id != user_id and other.username == new_username {
+            return {"error": "Username already taken", "status": 400};
+        }
+    }
+
+    u.username = new_username;
+    return user_dict(u);
 }

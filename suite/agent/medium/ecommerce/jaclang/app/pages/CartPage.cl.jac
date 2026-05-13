@@ -47,10 +47,20 @@ def:pub CartPage() -> JsxElement {
         return <div className="max-w-4xl mx-auto px-6 py-12 text-gray-500">Loading...</div>;
     }
 
-    items = cart["items"] if cart else [];
+    items: Any = cart["items"] if cart else [];
 
     return <div className="max-w-4xl mx-auto px-6 py-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-6">Shopping Cart</h1>
+
+        {(<div className="p-8 bg-white border border-gray-200 rounded-xl text-center">
+            <div className="text-lg font-semibold text-gray-900">Your cart is empty.</div>
+            <div className="mt-2 text-sm text-gray-600">Add something you like to get started.</div>
+            <div className="mt-6">
+                <a href="/" className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition-colors">
+                    Browse products
+                </a>
+            </div>
+        </div>) if (not items or len(items) == 0) else None}
 
         {(<div>
             <div className="space-y-3">
@@ -77,6 +87,9 @@ def:pub CartPage() -> JsxElement {
                             className="w-8 h-8 rounded border border-gray-300 hover:bg-gray-50 text-gray-600"
                         >+</button>
                     </div>
+                    <div className="w-24 text-right text-sm font-semibold text-gray-900">
+                        {"$" + str(item["subtotal"])}
+                    </div>
                     <button
                         onClick={lambda _e: MouseEvent { remove_item(item["id"]); }}
                         className="text-gray-400 hover:text-red-600 text-sm"
@@ -85,9 +98,19 @@ def:pub CartPage() -> JsxElement {
             </div>
 
             <div className="mt-6 p-5 bg-gray-50 rounded-xl flex items-center justify-between">
-                <div>
-                    <div className="text-sm text-gray-600">Total</div>
-                    <div className="text-2xl font-bold text-gray-900">{"$" + str(cart["total"])}</div>
+                <div className="space-y-1">
+                    <div className="flex items-center justify-between gap-6 text-sm text-gray-700">
+                        <span>Subtotal</span>
+                        <span className="font-medium text-gray-900">{"$" + str(cart["total"])}</span>
+                    </div>
+                    <div className="flex items-center justify-between gap-6 text-sm text-gray-700">
+                        <span>Shipping</span>
+                        <span className="font-medium text-gray-900">{"$" + str(cart["shipping"])}</span>
+                    </div>
+                    <div className="pt-2 flex items-center justify-between gap-6">
+                        <span className="text-sm font-semibold text-gray-900">Grand total</span>
+                        <span className="text-2xl font-bold text-gray-900">{"$" + str(cart["grand_total"])}</span>
+                    </div>
                 </div>
                 <button
                     onClick={do_checkout}

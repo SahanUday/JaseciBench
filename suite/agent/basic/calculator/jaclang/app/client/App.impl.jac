@@ -65,7 +65,7 @@ impl app.press_op(op: str) -> None {
     if pending_op and not awaiting_operand {
         await press_equals();
     }
-    stored = float(display);
+    stored = float(str(display));
     stored_display = display;
     pending_op = op;
     awaiting_operand = True;
@@ -75,9 +75,9 @@ impl app.press_equals -> None {
     if not pending_op {
         return;
     }
-    b = float(display);
-    out = root spawn Compute(a=stored, op=pending_op, b=b);
-    payload = out.reports[0] if out.reports else None;
+    b = float(str(display));
+    out: Compute = root spawn Compute(a=stored, op=pending_op, b=b);
+    payload = out["reports"][0] if "reports" in out and out["reports"] else None;
     if payload and "error" in payload {
         last_error = payload["error"];
     } elif payload {
@@ -98,12 +98,34 @@ impl app.press_clear -> None {
     last_error = "";
 }
 
+impl app.press_backspace -> None {
+    if awaiting_operand {
+        return;
+    }
+
+    display = display[:-1];
+
+    if not display or display == "-" {
+        display = "0";
+        awaiting_operand = True;
+    }
+
+    last_error = "";
+}
+
 impl app.refresh_history -> None {
     out = root spawn ListHistory();
-    history = out.reports[0] if out.reports else [];
+    history = out["reports"][0] if "reports" in out and out["reports"] else [];
 }
 
 impl app.clear_history -> None {
     root spawn ClearHistory();
     history = [];
+}
+
+impl app.show_history_sum -> None {
+    out = root spawn SumHistory();
+    total = out["reports"][0] if "reports" in out and out["reports"] else 0.0;
+    display = str(total);
+    last_error = "";
 }

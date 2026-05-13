@@ -5,11 +5,11 @@ that the candidate codebase compiles and the seed loaded correctly.
 Hidden grading tests live alongside each task in the vault.
 """
 
-import from services.catalog { list_categories, list_products, get_product, search_products }
+import from services.catalog { list_categories, list_products, get_product, search_products, deactivate_product }
 import from services.users { get_profile, list_addresses, list_payment_methods }
 import from services.cart { get_cart }
 import from services.orders { list_orders, get_order }
-import from services.reviews { list_reviews }
+import from services.reviews { list_reviews, list_user_reviews }
 
 
 # Catalog -------------------------------------------------------------

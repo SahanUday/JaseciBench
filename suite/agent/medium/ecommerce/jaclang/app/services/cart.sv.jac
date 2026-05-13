@@ -42,10 +42,20 @@ def:pub get_cart(user_id: str) -> dict {
         if v is None {
             continue;
         }
-        items.append(cart_item_dict(ci, v));
-        total = total + v.price;
+        item = cart_item_dict(ci, v);
+        items.append(item);
+        total = total + item["subtotal"];
     }
-    return {"items": items, "total": total};
+    total_rounded = int(total * 100) / 100.0;
+    shipping = 5.99 if total_rounded > 0.0 else 0.0;
+    grand_total = int((total_rounded + shipping) * 100) / 100.0;
+    return {
+        "items": items,
+        "total": total_rounded,
+        "shipping": shipping,
+        "grand_total": grand_total,
+        "count": len(items),
+    };
 }
 
 
@@ -58,15 +68,23 @@ def:pub add_to_cart(user_id: str, variant_id: str, quantity: int = 1) -> dict {
     if v is None {
         return {"error": "Variant not found", "status": 404};
     }
-    if v.stock_qty < quantity {
+    existing_ci: CartItem | None = None;
+    existing_qty = 0;
+    for ci in [root() -->][?:CartItem] {
+        if ci.user_id == user_id and ci.variant_id == variant_id {
+            existing_ci = ci;
+            existing_qty = ci.quantity;
+            break;
+        }
+    }
+
+    if existing_qty + quantity > v.stock_qty {
         return {"error": "Insufficient stock", "status": 400};
     }
 
-    for ci in [root() -->][?:CartItem] {
-        if ci.user_id == user_id and ci.variant_id == variant_id {
-            ci.quantity = ci.quantity + quantity;
-            return {"id": ci.id, "variant_id": ci.variant_id, "quantity": ci.quantity};
-        }
+    if existing_ci is not None {
+        existing_ci.quantity = existing_ci.quantity + quantity;
+        return {"id": existing_ci.id, "variant_id": existing_ci.variant_id, "quantity": existing_ci.quantity};
     }
 
     next_id = "ci_" + str(len([root() -->][?:CartItem]) + 1).zfill(3);
@@ -77,6 +95,7 @@ def:pub add_to_cart(user_id: str, variant_id: str, quantity: int = 1) -> dict {
 
 
 def:pub update_cart_item(cart_item_id: str, quantity: int) -> dict {
+    ensure_seeded();
     ci = find_cart_item(cart_item_id);
     if ci is None {
         return {"error": "Cart item not found", "status": 404};
@@ -91,6 +110,36 @@ def:pub update_cart_item(cart_item_id: str, quantity: int) -> dict {
     }
     ci.quantity = quantity;
     return {"id": ci.id, "quantity": ci.quantity};
+}
+
+
+def:pub cart_total_quantity(user_id: str) -> int {
+    ensure_seeded();
+    total_qty = 0;
+    for ci in [root() -->][?:CartItem] {
+        if ci.user_id == user_id {
+            total_qty = total_qty + ci.quantity;
+        }
+    }
+    return total_qty;
+}
+
+
+def:pub cart_replace_variant(cart_item_id: str, new_variant_id: str) -> dict {
+    ensure_seeded();
+    ci = find_cart_item(cart_item_id);
+    if ci is None {
+        return {"error": "Cart item not found", "status": 404};
+    }
+    v = find_variant(new_variant_id);
+    if v is None {
+        return {"error": "Variant not found", "status": 404};
+    }
+    if ci.quantity > v.stock_qty {
+        return {"error": "Insufficient stock", "status": 400};
+    }
+    ci.variant_id = new_variant_id;
+    return cart_item_dict(ci, v);
 }
 
 
@@ -179,6 +228,10 @@ def:pub checkout(
     for idx in range(len(resolved_variants)) {
         v = resolved_variants[idx];
         qty = resolved_qtys[idx];
+
+        # decrement inventory (pre-validation above prevents negative stock)
+        v.stock_qty = v.stock_qty - qty;
+
         oi_id = "oi_" + order_id + "_" + str(idx + 1);
         order ++> OrderItem(
             id=oi_id,

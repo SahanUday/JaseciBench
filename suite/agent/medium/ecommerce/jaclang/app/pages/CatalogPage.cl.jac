@@ -18,10 +18,30 @@ def:pub CatalogPage() -> JsxElement {
         loading = False;
     }
 
+    async def select_category(cat_id: str) -> None {
+        selected_cat = cat_id;
+        loading = True;
+        prods_result = await list_products(cat_id);
+        products = prods_result if prods_result else [];
+        loading = False;
+    }
+
     return <div className="max-w-6xl mx-auto px-6 py-8">
         <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Catalog</h1>
             <p className="text-gray-600 mt-1">Browse our products by category.</p>
+        </div>
+
+        <div className="flex flex-wrap gap-2 mb-6">
+            <button
+                className={"px-3 py-1.5 rounded-full text-sm border transition " + ("bg-gray-900 text-white border-gray-900" if selected_cat == "" else "bg-white text-gray-700 border-gray-300 hover:bg-gray-50")}
+                onClick={lambda _e: MouseEvent { select_category(""); }}
+            >All</button>
+            {[<button
+                key={c["id"]}
+                className={"px-3 py-1.5 rounded-full text-sm border transition " + ("bg-gray-900 text-white border-gray-900" if selected_cat == c["id"] else "bg-white text-gray-700 border-gray-300 hover:bg-gray-50")}
+                onClick={lambda _e: MouseEvent { select_category(str(c["id"])); }}
+            >{c["name"]}</button> for c in categories]}
         </div>
 
         {(<p className="text-gray-500">Loading...</p>) if loading else None}
