@@ -7,6 +7,16 @@ def:pub OrdersPage() -> JsxElement {
     has orders: list = [];
     has loading: bool = True;
 
+    def status_color(status: str) -> str {
+        if status == "delivered" { return "bg-green-100 text-green-700"; }
+        if status == "shipped" { return "bg-blue-100 text-blue-700"; }
+        if status == "processed" { return "bg-yellow-100 text-yellow-700"; }
+        if status == "pending" { return "bg-gray-100 text-gray-700"; }
+        if status == "cancelled" { return "bg-red-100 text-red-700"; }
+        if status == "returned" { return "bg-purple-100 text-purple-700"; }
+        return "bg-gray-100 text-gray-700";
+    }
+
     async def refresh() -> None {
         result = await list_orders("user_001");
         orders = result if result else [];
@@ -38,15 +48,15 @@ def:pub OrdersPage() -> JsxElement {
                         <div className="text-sm font-bold text-gray-900">{o["id"]}</div>
                         <div className="text-xs text-gray-500 mt-0.5">{o["created_at"]}</div>
                         <div className="text-xs text-gray-600 mt-2">
-                            {o["shipping_address1"] + ", " + o["shipping_city"] + ", " + o["shipping_state"] + " " + o["shipping_zip"]}
+                            {str(o["shipping_address1"]) + ", " + str(o["shipping_city"]) + ", " + str(o["shipping_state"]) + " " + str(o["shipping_zip"])}
                         </div>
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                        <span className="text-xs text-gray-600">
+                        <span className={"px-2.5 py-1 rounded-full text-xs font-medium " + status_color(str(o["status"]))}>
                             {o["status"]}
                         </span>
                         {(<button
-                            onClick={lambda _e: MouseEvent { do_cancel(o["id"]); }}
+                            onClick={lambda _e: MouseEvent { do_cancel(str(o["id"])); }}
                             className="text-xs text-red-600 hover:text-red-700 hover:underline"
                         >Cancel</button>) if o["status"] in ["pending", "processed"] else None}
                     </div>
