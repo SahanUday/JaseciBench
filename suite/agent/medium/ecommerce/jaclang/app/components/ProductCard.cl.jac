@@ -18,9 +18,15 @@ def:pub ProductCard(product: Any) -> JsxElement {
             {product["description"]}
         </p>
         <div className="mt-3 flex items-center justify-between">
+            <span className="text-sm font-bold text-gray-900">
+                {"$" + str(product["min_price"])}
+            </span>
             <span className="text-xs text-gray-400">
                 {str(len(product["variants"])) + " variants"}
             </span>
         </div>
+        {<div className="mt-2 pt-2 border-t border-gray-100 text-xs text-gray-600">
+            <span className="text-yellow-500">★</span> {str(product["average_rating"])} ({str(product["review_count"])} reviews)
+        </div> if product["review_count"] > 0 else ""}
     </Link>;
 }

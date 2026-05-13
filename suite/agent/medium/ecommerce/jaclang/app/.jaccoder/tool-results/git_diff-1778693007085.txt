@@ -1,0 +1,952 @@
+diff --git a/suite/agent/basic/calculator/jaclang/app/client/App.cl.jac b/suite/agent/basic/calculator/jaclang/app/client/App.cl.jac
+index b56f75f..0b33144 100644
+--- a/suite/agent/basic/calculator/jaclang/app/client/App.cl.jac
++++ b/suite/agent/basic/calculator/jaclang/app/client/App.cl.jac
+@@ -2,7 +2,7 @@
+ 
+ import from "@jac/runtime" { jacSignup, jacLogin, jacLogout, jacIsLoggedIn }
+ 
+-sv import from server.compute { Compute, ListHistory, ClearHistory }
++sv import from server.compute { Compute, ListHistory, ClearHistory, SumHistory }
+ 
+ import from .components.Display { Display }
+ import from .components.Keypad { Keypad }
+@@ -42,8 +42,10 @@ def:pub app -> JsxElement {
+     async def press_op(op: str) -> None;
+     async def press_equals -> None;
+     def press_clear -> None;
++    def press_backspace -> None;
+     async def refresh_history -> None;
+     async def clear_history -> None;
++    async def show_history_sum -> None;
+ 
+     if not is_logged_in {
+         return
+@@ -178,6 +180,7 @@ def:pub app -> JsxElement {
+                 on_op={press_op}
+                 on_equals={press_equals}
+                 on_clear={press_clear}
++                on_backspace={press_backspace}
+             />
+             <div style={{"marginTop": "1rem"}}>
+                 <button
+@@ -212,6 +215,21 @@ def:pub app -> JsxElement {
+                 >
+                     Clear history
+                 </button>) if history_visible else None}
++                <button
++                    data-testid="history-sum"
++                    onClick={lambda _e: MouseEvent { show_history_sum(); }}
++                    style={{
++                        "padding": "0.375rem 0.75rem",
++                        "background": "#f3f4f6",
++                        "border": "1px solid #d1d5db",
++                        "borderRadius": "0.375rem",
++                        "cursor": "pointer",
++                        "fontSize": "0.875rem",
++                        "marginLeft": "0.5rem"
++                    }}
++                >
++                    Σ
++                </button>
+             </div>
+             {(<ul
+                 data-testid="history-list"
+diff --git a/suite/agent/basic/calculator/jaclang/app/client/App.impl.jac b/suite/agent/basic/calculator/jaclang/app/client/App.impl.jac
+index be351c3..af2912e 100644
+--- a/suite/agent/basic/calculator/jaclang/app/client/App.impl.jac
++++ b/suite/agent/basic/calculator/jaclang/app/client/App.impl.jac
+@@ -98,6 +98,23 @@ impl app.press_clear -> None {
+     last_error = "";
+ }
+ 
++impl app.press_backspace -> None {
++    if awaiting_operand {
++        return;
++    }
++    if len(display) > 1 {
++        display = display[:-1];
++    } else {
++        display = "0";
++        awaiting_operand = True;
++    }
++    if display == "-" {
++        display = "0";
++        awaiting_operand = True;
++    }
++    last_error = "";
++}
++
+ impl app.refresh_history -> None {
+     out = root spawn ListHistory();
+     history = out.reports[0] if out.reports else [];
+@@ -107,3 +124,11 @@ impl app.clear_history -> None {
+     root spawn ClearHistory();
+     history = [];
+ }
++
++impl app.show_history_sum -> None {
++    out = root spawn SumHistory();
++    payload = out.reports[0] if out.reports else None;
++    if payload and "total" in payload {
++        display = str(payload["total"]);
++    }
++}
+diff --git a/suite/agent/basic/calculator/jaclang/app/client/components/Keypad.cl.jac b/suite/agent/basic/calculator/jaclang/app/client/components/Keypad.cl.jac
+index 1bce41f..a940c4c 100644
+--- a/suite/agent/basic/calculator/jaclang/app/client/components/Keypad.cl.jac
++++ b/suite/agent/basic/calculator/jaclang/app/client/components/Keypad.cl.jac
+@@ -37,7 +37,8 @@ def:pub Keypad(
+     on_digit: any,
+     on_op: any,
+     on_equals: any,
+-    on_clear: any
++    on_clear: any,
++    on_backspace: any
+ ) -> JsxElement {
+     digits = ["7", "8", "9", "4", "5", "6", "1", "2", "3", "0", "."];
+     ops = ["/", "*", "-", "+"];
+@@ -94,5 +95,21 @@ def:pub Keypad(
+             >
+                 C
+             </button>
++            <button
++                data-testid="calc-key-backspace"
++                onClick={lambda _e: MouseEvent { on_backspace(); }}
++                style={{
++                    "padding": "1rem",
++                    "fontSize": "1.125rem",
++                    "fontWeight": "600",
++                    "background": "#ef4444",
++                    "color": "#ffffff",
++                    "border": "none",
++                    "borderRadius": "0.5rem",
++                    "cursor": "pointer"
++                }}
++            >
++                ⌫
++            </button>
+         </div>;
+ }
+diff --git a/suite/agent/basic/calculator/jaclang/app/server/compute.sv.jac b/suite/agent/basic/calculator/jaclang/app/server/compute.sv.jac
+index d2be229..22500a8 100644
+--- a/suite/agent/basic/calculator/jaclang/app/server/compute.sv.jac
++++ b/suite/agent/basic/calculator/jaclang/app/server/compute.sv.jac
+@@ -42,6 +42,13 @@ walker:priv Compute {
+                 return;
+             }
+             value = self.a / self.b;
++        } elif self.op == "%" {
++            if self.b == 0.0 {
++                self.error = "modulo by zero";
++                report {"error": self.error};
++                return;
++            }
++            value = self.a % self.b;
+         } else {
+             self.error = "unknown operator: " + self.op;
+             report {"error": self.error};
+@@ -91,3 +98,19 @@ walker:priv ClearHistory {
+         report {"deleted": self.deleted};
+     }
+ }
++
++walker:priv SumHistory {
++    has total: float = 0.0;
++
++    can collect with Root entry {
++        visit [-->];
++    }
++
++    can accumulate with Calculation entry {
++        self.total += here.result;
++    }
++
++    can finish with Root exit {
++        report {"total": self.total};
++    }
++}
+diff --git a/suite/agent/medium/ecommerce/jaclang/app/components/ProductCard.cl.jac b/suite/agent/medium/ecommerce/jaclang/app/components/ProductCard.cl.jac
+index 2a92bbf..118cf30 100644
+--- a/suite/agent/medium/ecommerce/jaclang/app/components/ProductCard.cl.jac
++++ b/suite/agent/medium/ecommerce/jaclang/app/components/ProductCard.cl.jac
+@@ -18,9 +18,15 @@ def:pub ProductCard(product: Any) -> JsxElement {
+             {product["description"]}
+         </p>
+         <div className="mt-3 flex items-center justify-between">
++            <span className="text-sm font-bold text-gray-900">
++                {"$" + str(product["min_price"])}
++            </span>
+             <span className="text-xs text-gray-400">
+                 {str(len(product["variants"])) + " variants"}
+             </span>
+         </div>
++        {<div className="mt-2 pt-2 border-t border-gray-100 text-xs text-gray-600">
++            <span className="text-yellow-500">★</span> {str(product["average_rating"])} ({str(product["review_count"])} reviews)
++        </div> if product["review_count"] > 0 else ""}
+     </Link>;
+ }
+diff --git a/suite/agent/medium/ecommerce/jaclang/app/main.jac b/suite/agent/medium/ecommerce/jaclang/app/main.jac
+index d06d381..fd67871 100644
+--- a/suite/agent/medium/ecommerce/jaclang/app/main.jac
++++ b/suite/agent/medium/ecommerce/jaclang/app/main.jac
+@@ -6,7 +6,7 @@ lazily on first endpoint call (services.catalog.ensure_seeded).
+ """
+ 
+ import from seed { seed_catalog }
+-import from services.catalog { list_categories, list_products, get_product, search_products }
++import from services.catalog { list_categories, list_products, get_product, search_products, Category, Product, Variant, Review }
+ import from services.users {
+     list_users, get_profile, list_addresses, list_payment_methods,
+     add_address, update_address, delete_address,
+diff --git a/suite/agent/medium/ecommerce/jaclang/app/pages/CartPage.cl.jac b/suite/agent/medium/ecommerce/jaclang/app/pages/CartPage.cl.jac
+index f964d73..47647b2 100644
+--- a/suite/agent/medium/ecommerce/jaclang/app/pages/CartPage.cl.jac
++++ b/suite/agent/medium/ecommerce/jaclang/app/pages/CartPage.cl.jac
+@@ -49,8 +49,9 @@ def:pub CartPage() -> JsxElement {
+ 
+     items = cart["items"] if cart else [];
+ 
++    count = cart["count"] if cart else 0;
+     return <div className="max-w-4xl mx-auto px-6 py-8">
+-        <h1 className="text-3xl font-bold text-gray-900 mb-6">Shopping Cart</h1>
++        <h1 className="text-3xl font-bold text-gray-900 mb-6">{"Shopping Cart (" + str(count) + " items)"}</h1>
+ 
+         {(<div>
+             <div className="space-y-3">
+@@ -77,6 +78,9 @@ def:pub CartPage() -> JsxElement {
+                             className="w-8 h-8 rounded border border-gray-300 hover:bg-gray-50 text-gray-600"
+                         >+</button>
+                     </div>
++                    <div className="text-right font-bold text-gray-900 min-w-16">
++                        {"$" + str(item["subtotal"])}
++                    </div>
+                     <button
+                         onClick={lambda _e: MouseEvent { remove_item(item["id"]); }}
+                         className="text-gray-400 hover:text-red-600 text-sm"
+@@ -85,9 +89,19 @@ def:pub CartPage() -> JsxElement {
+             </div>
+ 
+             <div className="mt-6 p-5 bg-gray-50 rounded-xl flex items-center justify-between">
+-                <div>
+-                    <div className="text-sm text-gray-600">Total</div>
+-                    <div className="text-2xl font-bold text-gray-900">{"$" + str(cart["total"])}</div>
++                <div className="space-y-2">
++                    <div className="flex justify-between gap-8">
++                        <div className="text-sm text-gray-600">Subtotal</div>
++                        <div className="text-sm font-medium text-gray-900">{"$" + str(cart["total"])}</div>
++                    </div>
++                    <div className="flex justify-between gap-8">
++                        <div className="text-sm text-gray-600">Shipping</div>
++                        <div className="text-sm font-medium text-gray-900">{"$" + str(cart["shipping"])}</div>
++                    </div>
++                    <div className="border-t border-gray-300 pt-2 flex justify-between gap-8">
++                        <div className="text-sm font-bold text-gray-900">Grand Total</div>
++                        <div className="text-lg font-bold text-gray-900">{"$" + str(cart["grand_total"])}</div>
++                    </div>
+                 </div>
+                 <button
+                     onClick={do_checkout}
+@@ -98,6 +112,13 @@ def:pub CartPage() -> JsxElement {
+                 </button>
+             </div>
+             {(<p className="mt-3 text-sm text-center text-red-600">{feedback}</p>) if feedback else None}
+-        </div>) if len(items) > 0 else None}
++        </div>) if len(items) > 0 else <div className="flex flex-col items-center justify-center py-12 px-6">
++            <div className="text-gray-400 text-6xl mb-4">🛒</div>
++            <p className="text-xl font-semibold text-gray-900 mb-2">Your cart is empty</p>
++            <p className="text-gray-600 mb-6">Add some products to get started!</p>
++            <Link to="/" className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition-colors">
++                Browse products
++            </Link>
++        </div>}
+     </div>;
+ }
+diff --git a/suite/agent/medium/ecommerce/jaclang/app/pages/CatalogPage.cl.jac b/suite/agent/medium/ecommerce/jaclang/app/pages/CatalogPage.cl.jac
+index 986c226..6d51aaa 100644
+--- a/suite/agent/medium/ecommerce/jaclang/app/pages/CatalogPage.cl.jac
++++ b/suite/agent/medium/ecommerce/jaclang/app/pages/CatalogPage.cl.jac
+@@ -18,12 +18,30 @@ def:pub CatalogPage() -> JsxElement {
+         loading = False;
+     }
+ 
++    async def handle_category_click(e: Any, cat_id: str) -> None {
++        selected_cat = cat_id;
++        loading = True;
++        prods_result = await list_products(cat_id);
++        products = prods_result if prods_result else [];
++        loading = False;
++    }
++
+     return <div className="max-w-6xl mx-auto px-6 py-8">
+         <div className="mb-8">
+             <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Catalog</h1>
+             <p className="text-gray-600 mt-1">Browse our products by category.</p>
+         </div>
+ 
++        <div className="mb-6 flex flex-wrap gap-2">
++            <button
++                onClick={lambda e: handle_category_click(e, "")}
++                className={"px-4 py-2 rounded-lg font-medium transition-colors " + ("bg-blue-600 text-white" if selected_cat == "" else "bg-gray-200 text-gray-800 hover:bg-gray-300")}
++            >
++                All
++            </button>
++            {[<CategoryButton key={i} cat={categories[i]} selected={selected_cat} on_click={handle_category_click} /> for i in range(len(categories))]}
++        </div>
++
+         {(<p className="text-gray-500">Loading...</p>) if loading else None}
+         {(<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+             {[<ProductCard key={p["id"]} product={p} /> for p in products]}
+@@ -31,3 +49,21 @@ def:pub CatalogPage() -> JsxElement {
+         {(<p className="text-gray-500 text-center py-12">No products in this category.</p>) if not loading and len(products) == 0 else None}
+     </div>;
+ }
++
++
++def:pub CategoryButton(cat: Any, selected: str, on_click: Any) -> JsxElement {
++    cat_id: str = str(cat["id"]);
++    cat_name: str = str(cat["name"]);
++    product_count: int = int(cat["product_count"]) if "product_count" in cat else 0;
++
++    def handle_click(e: MouseEvent) -> None {
++        on_click(e, cat_id);
++    }
++
++    return <button
++        onClick={handle_click}
++        className={"px-4 py-2 rounded-lg font-medium transition-colors " + ("bg-blue-600 text-white" if selected == cat_id else "bg-gray-200 text-gray-800 hover:bg-gray-300")}
++    >
++        {cat_name} ({product_count})
++    </button>;
++}
+diff --git a/suite/agent/medium/ecommerce/jaclang/app/pages/OrdersPage.cl.jac b/suite/agent/medium/ecommerce/jaclang/app/pages/OrdersPage.cl.jac
+index af5153d..2b801a1 100644
+--- a/suite/agent/medium/ecommerce/jaclang/app/pages/OrdersPage.cl.jac
++++ b/suite/agent/medium/ecommerce/jaclang/app/pages/OrdersPage.cl.jac
+@@ -1,67 +1,79 @@
+ """Orders page: list user orders + cancel."""
+ 
++import from "@jac/runtime" { Link }
+ sv import from ..services.orders { list_orders, cancel_order }
+ 
+ 
+ def:pub OrdersPage() -> JsxElement {
+-    has orders: list = [];
+-    has loading: bool = True;
++     has orders: list = [];
++     has loading: bool = True;
+ 
+-    def status_color(status: str) -> str {
+-        if status == "delivered" { return "bg-green-100 text-green-700"; }
+-        if status == "shipped" { return "bg-blue-100 text-blue-700"; }
+-        if status == "processed" { return "bg-yellow-100 text-yellow-700"; }
+-        if status == "pending" { return "bg-gray-100 text-gray-700"; }
+-        if status == "cancelled" { return "bg-red-100 text-red-700"; }
+-        if status == "returned" { return "bg-purple-100 text-purple-700"; }
+-        return "bg-gray-100 text-gray-700";
+-    }
++     def status_color(status: str) -> str {
++         if status == "delivered" { return "bg-green-100 text-green-700"; }
++         if status == "shipped" { return "bg-blue-100 text-blue-700"; }
++         if status == "processed" { return "bg-yellow-100 text-yellow-700"; }
++         if status == "pending" { return "bg-gray-100 text-gray-700"; }
++         if status == "cancelled" { return "bg-red-100 text-red-700"; }
++         if status == "returned" { return "bg-purple-100 text-purple-700"; }
++         return "bg-gray-100 text-gray-700";
++     }
+ 
+-    async def refresh() -> None {
+-        result = await list_orders("user_001");
+-        orders = result if result else [];
+-        loading = False;
+-    }
++     async def refresh() -> None {
++         result = await list_orders("user_001");
++         orders = result if result else [];
++         loading = False;
++     }
+ 
+-    async can with entry {
+-        await refresh();
+-    }
++     async can with entry {
++         await refresh();
++     }
+ 
+-    async def do_cancel(order_id: str) -> None {
+-        await cancel_order(order_id);
+-        await refresh();
+-    }
++     async def do_cancel(order_id: str) -> None {
++         await cancel_order(order_id);
++         await refresh();
++     }
+ 
+-    if loading {
+-        return <div className="max-w-4xl mx-auto px-6 py-12 text-gray-500">Loading...</div>;
+-    }
++     if loading {
++         return <div className="max-w-4xl mx-auto px-6 py-12 text-gray-500">Loading...</div>;
++     }
+ 
+-    return <div className="max-w-4xl mx-auto px-6 py-8">
+-        <h1 className="text-3xl font-bold text-gray-900 mb-6">Your Orders</h1>
++     return <div className="max-w-4xl mx-auto px-6 py-8">
++         <h1 className="text-3xl font-bold text-gray-900 mb-6">Your Orders</h1>
+ 
+-        {(<p className="text-gray-500 text-center py-12">No orders yet.</p>) if len(orders) == 0 else None}
++         {(<div className="text-center py-12">
++             <p className="text-gray-500 mb-6">No orders yet.</p>
++             <Link to="/" className="inline-block px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
++                 Browse products
++             </Link>
++         </div>) if len(orders) == 0 else None}
+ 
+-        <div className="space-y-3">
+-            {[<div key={o["id"]} className="p-4 bg-white border border-gray-200 rounded-xl">
+-                <div className="flex items-start justify-between gap-4">
+-                    <div className="min-w-0">
+-                        <div className="text-sm font-bold text-gray-900">{o["id"]}</div>
+-                        <div className="text-xs text-gray-500 mt-0.5">{o["created_at"]}</div>
+-                        <div className="text-xs text-gray-600 mt-2">
+-                            {str(o["shipping_address1"]) + ", " + str(o["shipping_city"]) + ", " + str(o["shipping_state"]) + " " + str(o["shipping_zip"])}
+-                        </div>
+-                    </div>
+-                    <div className="flex flex-col items-end gap-2">
+-                        <span className={"px-2.5 py-1 rounded-full text-xs font-medium " + status_color(str(o["status"]))}>
+-                            {o["status"]}
+-                        </span>
+-                        {(<button
+-                            onClick={lambda _e: MouseEvent { do_cancel(str(o["id"])); }}
+-                            className="text-xs text-red-600 hover:text-red-700 hover:underline"
+-                        >Cancel</button>) if o["status"] in ["pending", "processed"] else None}
+-                    </div>
+-                </div>
+-            </div> for o in orders]}
+-        </div>
+-    </div>;
++         <div className="space-y-3">
++             {[<div key={o["id"]} className="p-4 bg-white border border-gray-200 rounded-xl">
++                 <div className="flex items-start justify-between gap-4">
++                     <div className="min-w-0">
++                         <Link to={"/orders/" + o["id"]} className="text-sm font-bold text-blue-600 hover:text-blue-700 hover:underline">{o["id"]}</Link>
++                         <div className="text-xs text-gray-500 mt-0.5">{o["created_at"]}</div>
++                         <div className="text-xs text-gray-600 mt-2">
++                             {str(o["shipping_address1"]) + ", " + str(o["shipping_city"]) + ", " + str(o["shipping_state"]) + " " + str(o["shipping_zip"])}
++                         </div>
++                         <div className="text-xs text-gray-600 mt-1">
++                             {"Paid: $" + str(o["total_paid"])}
++                         </div>
++                         <div className="text-xs text-gray-500 mt-2">
++                             {str(o["item_count"]) + " items"}
++                         </div>
++                     </div>
++                     <div className="flex flex-col items-end gap-2">
++                         <span className={"px-2.5 py-1 rounded-full text-xs font-medium " + status_color(str(o["status"]))}>
++                             {o["status"]}
++                         </span>
++                         {(<button
++                             onClick={lambda _e: MouseEvent { do_cancel(str(o["id"])); }}
++                             className="text-xs text-red-600 hover:text-red-700 hover:underline"
++                         >Cancel</button>) if o["status"] in ["pending", "processed"] else None}
++                     </div>
++                 </div>
++             </div> for o in orders]}
++         </div>
++     </div>;
+ }
+diff --git a/suite/agent/medium/ecommerce/jaclang/app/pages/ProductPage.cl.jac b/suite/agent/medium/ecommerce/jaclang/app/pages/ProductPage.cl.jac
+index 573ea62..b2a99fb 100644
+--- a/suite/agent/medium/ecommerce/jaclang/app/pages/ProductPage.cl.jac
++++ b/suite/agent/medium/ecommerce/jaclang/app/pages/ProductPage.cl.jac
+@@ -56,6 +56,10 @@ def:pub ProductPage() -> JsxElement {
+                 <h1 className="text-3xl font-bold text-gray-900">{product["name"]}</h1>
+                 <p className="text-gray-600 mt-2 leading-relaxed">{product["description"]}</p>
+ 
++                {(<div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
++                    <p className="text-red-700 font-semibold">Currently unavailable</p>
++                </div>) if sum([v["stock_qty"] for v in product["variants"]]) == 0 else None}
++
+                 <div className="mt-6">
+                     <h3 className="text-sm font-semibold text-gray-900 mb-2">Variants</h3>
+                     <div className="space-y-2">
+diff --git a/suite/agent/medium/ecommerce/jaclang/app/pages/SearchPage.cl.jac b/suite/agent/medium/ecommerce/jaclang/app/pages/SearchPage.cl.jac
+index b2be8e7..19d521e 100644
+--- a/suite/agent/medium/ecommerce/jaclang/app/pages/SearchPage.cl.jac
++++ b/suite/agent/medium/ecommerce/jaclang/app/pages/SearchPage.cl.jac
+@@ -1,21 +1,36 @@
+-"""Search page: search products by query."""
++"""Search page: search products by query, category, and price."""
+ 
+-sv import from ..services.catalog { search_products }
++sv import from ..services.catalog { search_products, list_categories }
+ import from ..components.ProductCard { ProductCard }
+ 
+ 
+ def:pub SearchPage() -> JsxElement {
+     has query: str = "";
++    has category_id: str = "";
++    has min_price: str = "";
++    has max_price: str = "";
+     has results: list = [];
++    has categories: list = [];
+     has searching: bool = False;
+     has searched: bool = False;
+ 
++    async can with entry {
++        result = await list_categories();
++        if result {
++            categories = result;
++        }
++    }
++
+     async def do_search(e: FormEvent) -> None {
+         e.preventDefault();
+-        if not query.strip() { return; }
+         searching = True;
+-        result = await search_products(query);
+-        results = result if result else [];
++        # Convert price strings to floats, defaulting to 0.0 if empty
++        min_p: float = float(min_price) if min_price.strip() else 0.0;
++        max_p: float = float(max_price) if max_price.strip() else 0.0;
++        result = await search_products(query, category_id, min_p, max_p);
++        if result {
++            results = result;
++        }
+         searching = False;
+         searched = True;
+     }
+@@ -23,23 +38,55 @@ def:pub SearchPage() -> JsxElement {
+     return <div className="max-w-6xl mx-auto px-6 py-8">
+         <h1 className="text-3xl font-bold text-gray-900 mb-6">Search Products</h1>
+ 
+-        <form onSubmit={do_search} className="flex gap-2 mb-8">
+-            <input
+-                type="text"
+-                value={query}
+-                onChange={lambda e: ChangeEvent { query = e.target.value; }}
+-                placeholder="Try 'shirt', 'coffee', 'wireless'..."
+-                className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
+-            />
+-            <button
+-                type="submit"
+-                className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg"
+-            >
+-                Search
+-            </button>
++        <form onSubmit={do_search} className="mb-8">
++            <div className="flex flex-col gap-4 mb-6">
++                <div className="flex gap-2">
++                    <input
++                        type="text"
++                        value={query}
++                        onChange={lambda e: ChangeEvent { query = e.target.value; }}
++                        placeholder="Try 'shirt', 'coffee', 'wireless'..."
++                        className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
++                    />
++                    <button
++                        type="submit"
++                        className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg"
++                    >
++                        Search
++                    </button>
++                </div>
++
++                <div className="flex gap-4 flex-wrap">
++                    <select
++                        value={category_id}
++                        onChange={lambda e: ChangeEvent { category_id = e.target.value; }}
++                        className="px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
++                    >
++                        <option value="">All Categories</option>
++                        {[<option key={c["id"]} value={c["id"]}>{c["name"]}</option> for c in categories]}
++                    </select>
++
++                    <input
++                        type="text"
++                        value={min_price}
++                        onChange={lambda e: ChangeEvent { min_price = e.target.value; }}
++                        placeholder="Min Price"
++                        className="w-32 px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
++                    />
++
++                    <input
++                        type="text"
++                        value={max_price}
++                        onChange={lambda e: ChangeEvent { max_price = e.target.value; }}
++                        placeholder="Max Price"
++                        className="w-32 px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
++                    />
++                </div>
++            </div>
+         </form>
+ 
+         {(<p className="text-gray-500">Searching...</p>) if searching else None}
++        {(<p className="text-gray-600">No products match your search.</p>) if (searched and not searching and len(results) == 0) else None}
+         {(<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+             {[<ProductCard key={p["id"]} product={p} /> for p in results]}
+         </div>) if len(results) > 0 else None}
+diff --git a/suite/agent/medium/ecommerce/jaclang/app/services/cart.sv.jac b/suite/agent/medium/ecommerce/jaclang/app/services/cart.sv.jac
+index 406ae94..4d4eb0f 100644
+--- a/suite/agent/medium/ecommerce/jaclang/app/services/cart.sv.jac
++++ b/suite/agent/medium/ecommerce/jaclang/app/services/cart.sv.jac
+@@ -43,9 +43,11 @@ def:pub get_cart(user_id: str) -> dict {
+             continue;
+         }
+         items.append(cart_item_dict(ci, v));
+-        total = total + v.price;
++        total = total + (v.price * ci.quantity);
+     }
+-    return {"items": items, "total": total};
++    shipping = 5.99 if total > 0.0 else 0.0;
++    grand_total = total + shipping;
++    return {"items": items, "total": total, "shipping": shipping, "grand_total": grand_total, "count": len(items)};
+ }
+ 
+ 
+@@ -58,7 +60,16 @@ def:pub add_to_cart(user_id: str, variant_id: str, quantity: int = 1) -> dict {
+     if v is None {
+         return {"error": "Variant not found", "status": 404};
+     }
+-    if v.stock_qty < quantity {
++
++    existing_qty = 0;
++    for ci in [root() -->][?:CartItem] {
++        if ci.user_id == user_id and ci.variant_id == variant_id {
++            existing_qty = ci.quantity;
++            break;
++        }
++    }
++
++    if existing_qty + quantity > v.stock_qty {
+         return {"error": "Insufficient stock", "status": 400};
+     }
+ 
+@@ -186,6 +197,7 @@ def:pub checkout(
+             price_snapshot=v.price,
+             variant_id=v.id,
+         );
++        v.stock_qty = v.stock_qty - qty;
+     }
+ 
+     total_rounded = int(total * 100) / 100.0;
+diff --git a/suite/agent/medium/ecommerce/jaclang/app/services/catalog.sv.jac b/suite/agent/medium/ecommerce/jaclang/app/services/catalog.sv.jac
+index 909e338..8700d4e 100644
+--- a/suite/agent/medium/ecommerce/jaclang/app/services/catalog.sv.jac
++++ b/suite/agent/medium/ecommerce/jaclang/app/services/catalog.sv.jac
+@@ -1,6 +1,6 @@
+ """Catalog service: categories, products, variants, search."""
+ 
+-import from models { Category, Product, Variant }
++import from models { Category, Product, Variant, Review }
+ import from seed { seed_catalog }
+ 
+ 
+@@ -12,10 +12,17 @@ def ensure_seeded() -> None {
+ 
+ 
+ def category_dict(c: Category) -> dict {
++    product_count = 0;
++    for p in [root() -->][?:Product] {
++        if p.category_id == c.id and p.active {
++            product_count += 1;
++        }
++    }
+     return {
+         "id": c.id,
+         "name": c.name,
+         "description": c.description,
++        "product_count": product_count,
+     };
+ }
+ 
+@@ -33,6 +40,18 @@ def variant_dict(v: Variant) -> dict {
+ 
+ 
+ def product_dict(p: Product, include_variants: bool = True) -> dict {
++    # Calculate review stats
++    reviews = [r for r in [p -->][?:Review]];
++    review_count = len(reviews);
++    average_rating = 0.0;
++    if review_count > 0 {
++        total_rating = 0;
++        for r in reviews {
++            total_rating = total_rating + r.rating;
++        }
++        average_rating = round(total_rating / review_count, 2);
++    }
++    
+     if not include_variants {
+         return {
+             "id": p.id,
+@@ -40,9 +59,15 @@ def product_dict(p: Product, include_variants: bool = True) -> dict {
+             "description": p.description,
+             "category_id": p.category_id,
+             "active": p.active,
++            "average_rating": average_rating,
++            "review_count": review_count,
+         };
+     }
+     variants = [variant_dict(v) for v in [p -->][?:Variant]];
++    min_price = 0.0;
++    if variants {
++        min_price = min([v["price"] for v in variants]);
++    }
+     return {
+         "id": p.id,
+         "name": p.name,
+@@ -50,6 +75,9 @@ def product_dict(p: Product, include_variants: bool = True) -> dict {
+         "category_id": p.category_id,
+         "active": p.active,
+         "variants": variants,
++        "min_price": min_price,
++        "average_rating": average_rating,
++        "review_count": review_count,
+     };
+ }
+ 
+@@ -85,6 +113,9 @@ def:pub list_categories() -> list[dict] {
+ def:pub list_products(category_id: str = "") -> list[dict] {
+     ensure_seeded();
+     products = [root() -->][?:Product];
++    if category_id {
++        return [product_dict(p) for p in products if p.active and p.category_id == category_id];
++    }
+     return [product_dict(p) for p in products if p.active];
+ }
+ 
+@@ -102,20 +133,39 @@ def:pub get_product(product_id: str) -> dict | None {
+ }
+ 
+ 
+-def:pub search_products(q: str) -> list[dict] {
++def:pub search_products(q: str = "", category_id: str = "", min_price: float = 0.0, max_price: float = 0.0) -> list[dict] {
+     ensure_seeded();
+-    if not q {
+-        return [];
+-    }
+     q_lower = q.lower();
+     matches = [];
+     for p in [root() -->][?:Product] {
+         if not p.active {
+             continue;
+         }
+-        if q_lower in p.name.lower() or q_lower in p.description.lower() {
+-            matches.append(product_dict(p));
++        # Filter by text query if provided
++        if q and not (q_lower in p.name.lower() or q_lower in p.description.lower()) {
++            continue;
++        }
++        # Filter by category if provided
++        if category_id and p.category_id != category_id {
++            continue;
++        }
++        # Filter by price range if provided
++        if min_price > 0.0 or max_price > 0.0 {
++            variants = [v for v in [p -->][?:Variant]];
++            if variants {
++                min_variant_price = min([v.price for v in variants]);
++                if min_price > 0.0 and min_variant_price < min_price {
++                    continue;
++                }
++                if max_price > 0.0 and min_variant_price > max_price {
++                    continue;
++                }
++            } else {
++                # Skip products with no variants if price filtering is active
++                continue;
++            }
+         }
++        matches.append(product_dict(p));
+     }
+     return matches;
+ }
+diff --git a/suite/agent/medium/ecommerce/jaclang/app/services/orders.sv.jac b/suite/agent/medium/ecommerce/jaclang/app/services/orders.sv.jac
+index a977a72..7b2f130 100644
+--- a/suite/agent/medium/ecommerce/jaclang/app/services/orders.sv.jac
++++ b/suite/agent/medium/ecommerce/jaclang/app/services/orders.sv.jac
+@@ -17,6 +17,17 @@ def find_order(order_id: str) -> Order | None {
+ 
+ 
+ def order_dict(o: Order, include_items: bool = True) -> dict {
++    # Get payment nodes
++    payment_nodes: list = [p for p in [o -->][?:Payment]];
++    
++    # Build payment dicts to calculate total_paid
++    payments_list = [
++        {"amount": p.amount, "transaction_type": p.transaction_type}
++        for p in payment_nodes
++    ];
++    # Calculate: sum of payments minus refunds
++    total_paid = sum([p["amount"] if p["transaction_type"] == "payment" else 0 for p in payments_list]) - sum([p["amount"] if p["transaction_type"] == "refund" else 0 for p in payments_list]);
++    
+     if not include_items {
+         return {
+             "id": o.id,
+@@ -29,6 +40,8 @@ def order_dict(o: Order, include_items: bool = True) -> dict {
+             "shipping_zip": o.shipping_zip,
+             "shipping_country": o.shipping_country,
+             "created_at": o.created_at,
++            "item_count": len([o -->][?:OrderItem]),
++            "total_paid": round(total_paid, 2),
+         };
+     }
+     items = [
+@@ -106,6 +119,16 @@ def:pub cancel_order(order_id: str) -> dict {
+     if o is None {
+         return {"error": "Order not found", "status": 404};
+     }
++    if o.status != "pending" {
++        return {"error": "Only pending orders can be cancelled (current status: " + o.status + ")", "status": 400};
++    }
++
++    for oi in [o -->][?:OrderItem] {
++        v = find_variant(oi.variant_id);
++        if v is not None {
++            v.stock_qty = v.stock_qty + oi.quantity;
++        }
++    }
+ 
+     now_str = str(datetime.now());
+     refund_seq = 0;
+@@ -137,45 +160,45 @@ def:pub return_items(order_id: str, item_ids: list[str], payment_method_id: str)
+         return {"error": "Only delivered orders can be returned (current status: " + o.status + ")", "status": 400};
+     }
+ 
+-    items_to_return: list[OrderItem] = [];
+-    for oi_id in item_ids {
+-        oi = find_order_item(o, oi_id);
+-        if oi is None {
+-            return {"error": "Order item " + oi_id + " not found in order", "status": 404};
+-        }
+-        items_to_return.append(oi);
+-    }
+-
+-    refund_total = 0.0;
+-    for oi in items_to_return {
+-        oi.returned = True;
+-        v = find_variant(oi.variant_id);
+-        if v is not None {
+-            v.stock_qty = v.stock_qty + oi.quantity;
++    # Validate and mark items as returned
++    total_refund = 0.0;
++    for item_id in item_ids {
++        oi = find_order_item(o, item_id);
++        if oi is not None {
++            if oi.returned {
++                return {"error": "Item " + item_id + " has already been returned", "status": 400};
++            }
++            oi.returned = True;
++            total_refund = total_refund + (oi.price_snapshot * oi.quantity);
++            v = find_variant(oi.variant_id);
++            if v is not None {
++                v.stock_qty = v.stock_qty + oi.quantity;
++            }
+         }
+-        refund_total = refund_total + (oi.price_snapshot * oi.quantity);
+     }
+ 
++    # Create refund payment
+     now_str = str(datetime.now());
+-    refund_seq = len([p for p in [o -->][?:Payment] if p.transaction_type == "refund"]) + 1;
+     o ++> Payment(
+-        id="refund_" + o.id + "_" + str(refund_seq),
+-        amount=int(refund_total * 100) / 100.0,
++        id="refund_" + o.id + "_" + now_str,
++        amount=total_refund,
+         transaction_type="refund",
+         payment_method_id=payment_method_id,
+         created_at=now_str,
+     );
+ 
+-    all_returned = True;
+-    for oi in [o -->][?:OrderItem] {
+-        if not oi.returned {
+-            all_returned = False;
+-        }
+-    }
+-    if all_returned {
+-        o.status = "returned";
+-    }
++    o.status = "returned";
++    return order_dict(o);
++}
+ 
++
++def:pub update_order_status(order_id: str, status: str) -> dict {
++    ensure_seeded();
++    o = find_order(order_id);
++    if o is None {
++        return {"error": "Order not found", "status": 404};
++    }
++    o.status = status;
+     return order_dict(o);
+ }
+ 
+@@ -197,13 +220,13 @@ def:pub modify_order_items(order_id: str, changes: list[dict]) -> dict {
+ 
+         oi = find_order_item(o, oi_id);
+         if oi is None {
+-            return {"error": "Order item " + oi_id + " not found", "status": 404};
++            return {"error": "Order item " + str(oi_id) + " not found", "status": 404};
+         }
+ 
+         if new_variant_id and new_variant_id != oi.variant_id {
+             new_v = find_variant(new_variant_id);
+             if new_v is None {
+-                return {"error": "Variant " + new_variant_id + " not found", "status": 404};
++                return {"error": "Variant " + str(new_variant_id) + " not found", "status": 404};
+             }
+             qty_needed = new_quantity if new_quantity else oi.quantity;
+             if new_v.stock_qty < qty_needed {
+@@ -230,6 +253,18 @@ def:pub modify_order_items(order_id: str, changes: list[dict]) -> dict {
+         }
+     }
+ 
++    # Recalculate payment amount based on new order items total
++    new_total = 0.0;
++    for oi in [o -->][?:OrderItem] {
++        new_total = new_total + (oi.price_snapshot * oi.quantity);
++    }
++    new_total_rounded = int(new_total * 100) / 100.0;
++    for pay in [o -->][?:Payment] {
++        if pay.transaction_type == "payment" {
++            pay.amount = new_total_rounded;
++        }
++    }
++
+     return order_dict(o);
+ }
+ 
+@@ -251,17 +286,3 @@ def:pub update_order_address(order_id: str, address1: str, city: str, state: str
+     o.shipping_country = country;
+     return order_dict(o);
+ }
+-
+-
+-def:pub update_order_status(order_id: str, new_status: str) -> dict {
+-    valid = ["pending", "processed", "shipped", "delivered", "cancelled", "returned"];
+-    if new_status not in valid {
+-        return {"error": "Invalid status: " + new_status, "status": 400};
+-    }
+-    o = find_order(order_id);
+-    if o is None {
+-        return {"error": "Order not found", "status": 404};
+-    }
+-    o.status = new_status;
+-    return {"id": o.id, "status": o.status};
+-}
+diff --git a/suite/agent/medium/ecommerce/jaclang/app/services/reviews.sv.jac b/suite/agent/medium/ecommerce/jaclang/app/services/reviews.sv.jac
+index 5490262..84c5b18 100644
+--- a/suite/agent/medium/ecommerce/jaclang/app/services/reviews.sv.jac
++++ b/suite/agent/medium/ecommerce/jaclang/app/services/reviews.sv.jac
+@@ -35,6 +35,9 @@ def:pub add_review(product_id: str, user_id: str, rating: int, title: str = "",
+     if p is None {
+         return {"error": "Product not found", "status": 404};
+     }
++    if rating < 1 or rating > 5 {
++        return {"error": "Rating must be between 1 and 5", "status": 400};
++    }
+ 
+     next_num = len([root() -->][?:Review]);
+     for prod in [root() -->][?:Product] {

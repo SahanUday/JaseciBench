@@ -298,3 +298,37 @@ def:pub user_with_most_orders() -> str {
     
     return max_user;
 }
+
+
+def:pub recent_orders(limit: int = 10) -> list[dict] {
+    ensure_seeded();
+    
+    # Get all orders
+    all_orders = [root -->][?:Order];
+    
+    # Create list of (created_at_str, order_obj) tuples for sorting
+    order_with_time: list[tuple[str, Order]] = [];
+    for o in all_orders {
+        order_with_time.append((o.created_at, o));
+    }
+    
+    # Sort by created_at in descending order (newest first) using bubble sort
+    for i in range(len(order_with_time)) {
+        for j in range(len(order_with_time) - i - 1) {
+            if order_with_time[j][0] < order_with_time[j + 1][0] {
+                temp = order_with_time[j];
+                order_with_time[j] = order_with_time[j + 1];
+                order_with_time[j + 1] = temp;
+            }
+        }
+    }
+    
+    # Return only the top N orders as formatted dicts
+    result: list[dict] = [];
+    for i in range(min(limit, len(order_with_time))) {
+        o: Order = order_with_time[i][1];
+        result.append(order_dict(o, include_items=False));
+    }
+    
+    return result;
+}
