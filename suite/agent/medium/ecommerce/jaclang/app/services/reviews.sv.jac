@@ -36,6 +36,10 @@ def:pub add_review(product_id: str, user_id: str, rating: int, title: str = "", 
         return {"error": "Product not found", "status": 404};
     }
 
+    if rating < 1 or rating > 5 {
+        return {"error": "Rating must be between 1 and 5", "status": 400};
+    }
+
     next_num = len([root() -->][?:Review]);
     for prod in [root() -->][?:Product] {
         next_num = next_num + len([prod -->][?:Review]);
@@ -69,4 +73,51 @@ def:pub product_review_summary(product_id: str) -> dict {
     }
     avg = sum([r.rating for r in reviews]) / len(reviews);
     return {"count": len(reviews), "average_rating": int(avg * 100) / 100.0};
+}
+
+
+def:pub list_user_reviews(user_id: str) -> dict {
+    ensure_seeded();
+    all_reviews = [];
+    
+    # Collect reviews from all products
+    for prod in [root() -->][?:Product] {
+        for r in [prod -->][?:Review] {
+            if r.user_id == user_id {
+                all_reviews.append(r);
+            }
+        }
+    }
+    
+    reviews_data = [review_dict(r) for r in all_reviews];
+    return {"reviews": reviews_data, "count": len(reviews_data)};
+}
+
+
+def get_created_at(review: dict) -> str {
+    return review["created_at"];
+}
+
+
+def:pub recent_reviews(limit: int) -> dict {
+    ensure_seeded();
+    all_reviews = [];
+    
+    # Collect all reviews from all products
+    for prod in [root() -->][?:Product] {
+        for r in [prod -->][?:Review] {
+            all_reviews.append(r);
+        }
+    }
+    
+    # Convert to dicts first
+    reviews_data = [review_dict(r) for r in all_reviews];
+    
+    # Sort by created_at descending (newest first)
+    sorted_reviews = sorted(reviews_data, key=get_created_at, reverse=True);
+    
+    # Limit results
+    limited_reviews = sorted_reviews[:limit];
+    
+    return {"reviews": limited_reviews, "count": len(limited_reviews)};
 }

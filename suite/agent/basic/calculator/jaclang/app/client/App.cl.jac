@@ -2,7 +2,7 @@
 
 import from "@jac/runtime" { jacSignup, jacLogin, jacLogout, jacIsLoggedIn }
 
-sv import from server.compute { Compute, ListHistory, ClearHistory }
+sv import from server.compute { Compute, ListHistory, ClearHistory, SumHistory }
 
 import from .components.Display { Display }
 import from .components.Keypad { Keypad }
@@ -42,8 +42,10 @@ def:pub app -> JsxElement {
     async def press_op(op: str) -> None;
     async def press_equals -> None;
     def press_clear -> None;
+    def press_backspace -> None;
     async def refresh_history -> None;
     async def clear_history -> None;
+    async def show_history_sum -> None;
 
     if not is_logged_in {
         return
@@ -178,6 +180,7 @@ def:pub app -> JsxElement {
                 on_op={press_op}
                 on_equals={press_equals}
                 on_clear={press_clear}
+                on_backspace={press_backspace}
             />
             <div style={{"marginTop": "1rem"}}>
                 <button
@@ -207,10 +210,26 @@ def:pub app -> JsxElement {
                         "border": "1px solid #fca5a5",
                         "borderRadius": "0.375rem",
                         "cursor": "pointer",
-                        "fontSize": "0.875rem"
+                        "fontSize": "0.875rem",
+                        "marginRight": "0.5rem"
                     }}
                 >
                     Clear history
+                </button>) if history_visible else None}
+                {(<button
+                    data-testid="history-sum"
+                    onClick={lambda _e: MouseEvent { show_history_sum(); }}
+                    style={{
+                        "padding": "0.375rem 0.75rem",
+                        "background": "#dbeafe",
+                        "color": "#1e40af",
+                        "border": "1px solid #93c5fd",
+                        "borderRadius": "0.375rem",
+                        "cursor": "pointer",
+                        "fontSize": "0.875rem"
+                    }}
+                >
+                    Σ
                 </button>) if history_visible else None}
             </div>
             {(<ul

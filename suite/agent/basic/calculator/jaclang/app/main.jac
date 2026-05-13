@@ -2,7 +2,7 @@
 
 to sv:
 
-import from server.compute { Compute, ListHistory, ClearHistory }
+import from server.compute { Compute, ListHistory, ClearHistory, SumHistory }
 
 to cl:
 

@@ -18,11 +18,29 @@ def:pub CatalogPage() -> JsxElement {
         loading = False;
     }
 
+    async def select_category(cat_id: str) -> None {
+        selected_cat = cat_id;
+        prods_result = await list_products(cat_id);
+        products = prods_result if prods_result else [];
+    }
+
     return <div className="max-w-6xl mx-auto px-6 py-8">
         <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Catalog</h1>
             <p className="text-gray-600 mt-1">Browse our products by category.</p>
         </div>
+
+        {(<div className="mb-6 flex flex-wrap gap-2">
+            <button
+                className={"px-4 py-2 rounded-lg font-medium transition-colors " + ("bg-blue-600 text-white" if selected_cat == "" else "bg-gray-200 text-gray-700 hover:bg-gray-300")}
+                onClick={lambda _e: MouseEvent { select_category(""); }}
+            >All</button>
+            {[<button
+                key={c["id"]}
+                className={"px-4 py-2 rounded-lg font-medium transition-colors " + ("bg-blue-600 text-white" if selected_cat == c["id"] else "bg-gray-200 text-gray-700 hover:bg-gray-300")}
+                onClick={lambda _e: MouseEvent { select_category(c["id"]); }}
+            >{c["name"] + " (" + str(c["product_count"]) + ")"}</button> for c in categories]}
+        </div>) if not loading else None}
 
         {(<p className="text-gray-500">Loading...</p>) if loading else None}
         {(<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
